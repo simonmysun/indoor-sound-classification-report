@@ -1,0 +1,416 @@
+\chapter{Evaluation}
+  Nachdem in den vorangegangenen Kapiteln das Verfahren vorstellt und beschrieben wurde, schließt sich dessen Evaluation anhand von Bildern im Allgemeinen und Videosequenzen im speziellen an.\\
+
+\section{Bilder}
+
+% ------------------------------------------------------------------------------
+%  \paragraph{Pyramide}
+  Die Pyramide wird in ihrer Konstruktion nur durch die Anzahl zu erstellender Stufen ($PL$) bestimmt und ist unabhängig vom Inhalt des Bildes. 
+  Als Folge dessen dient die regelkonforme Erstellung der Stufen in Bezug auf deren Größe und die Prüfung der darin enthaltenen Pixelwerte als Beleg für die Korrektheit der Konstruktion.
+
+  Wie in Abb. \ref{Eval_Pyramide_Aufbau} und Tab. \ref{table:TabFarbenWeniger} dargestellt führt die Nutzung der Pyramide meist zu einer Reduzierung der Farbanzahl und folglich zum Ausdünnen der Menge der Merkmalsvektoren, welche allerdings ihre Verteilung im Merkmalsraum nicht verändern.
+
+  \begin{figure}[!t]
+    \begin{tabular}{cccc}%p{4.5cm}p{3cm}p{2.5cm}p{2.5cm}}
+      \subfloat[$l=0$]{
+        \label{fig:Eval_Pyramide_Pyramide_Opener_l0}
+        \includegraphics[width=4.2cm]{Bilder/Eval/Pyramide/Pyramide_Opener_l0}
+      } &
+      \subfloat[$l=1$]{
+        \label{fig:Eval_Pyramide_Pyramide_Opener_l1}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/Pyramide_Opener_l1}
+      } &
+      \subfloat[$l=2$]{
+        \label{fig:Eval_Pyramide_Pyramide_Opener_l2}	
+        \includegraphics[width=1.5cm]{Bilder/Eval/Pyramide/Pyramide_Opener_l2}
+      } &
+      \subfloat[$l=3$]{
+        \label{fig:Eval_Pyramide_Pyramide_Opener_l3}
+        \includegraphics[width=1cm]{Bilder/Eval/Pyramide/Pyramide_Opener_l3}
+      }\\
+      \subfloat[$l=0$]{
+        \label{fig:Eval_Pyramide_cSpace_t0_l0}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/cSpace_t0_L0}
+      } &
+      \subfloat[$l=1$]{
+        \label{fig:Eval_Pyramide_cSpace_t0_l1}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/cSpace_t0_L1}
+      } &
+      \subfloat[$l=2$]{
+        \label{fig:Eval_Pyramide_cSpace_t0_l2}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/cSpace_t0_L2}
+      } &
+      \subfloat[$l=3$]{
+        \label{fig:Eval_Pyramide_cSpace_t0_l3}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/cSpace_t0_L3}
+      }\\
+      \subfloat[$l=0$]{
+        \label{fig:Eval_Pyramide_Histogram_t0_l0}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/Histogram_t0_L0}
+      } &
+      \subfloat[$l=1$]{
+        \label{fig:Eval_Pyramide_Histogram_t0_l1}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/Histogram_t0_L1}
+      } &
+      \subfloat[$l=2$]{
+        \label{fig:Eval_Pyramide_Histogram_t0_l2}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/Histogram_t0_L2}
+      } &
+      \subfloat[$l=3$]{
+        \label{fig:Eval_Pyramide_Histogram_t0_l3}
+        \includegraphics[width=2.5cm]{Bilder/Eval/Pyramide/Histogram_t0_L3}
+      }
+    \end{tabular}
+    \caption{Aufbau einer Pyramide mit $PL=4$ aus einem Einzelbild (a) eines Videos und den höheren Stufen (b,c,d), sowie die zugehörigen RGB-Farbräume (e,f,g,h) und Histogramme (i,j,k,l) mit den enthaltenen Punkten und deren Häufigkeit. Die Kreisdurchmesser im Histogramm beschreiben die Anzahl der repräsentierten Farben analog zu Abb. \ref{fig:KMeansBeispielbild_Histogramm}.}
+    \label{Eval_Pyramide_Aufbau}
+  \end{figure}
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{ccc}
+        Pyramidenstufe & Größe der Stufe & Farbanzahl\\
+        0 &	720x576	&	45800\\
+        1 &	360x288	&	30638\\
+        2 &	180x144	&	12559\\
+        3 &	90x72	&	3686\\
+        4 &	45x36	&	999
+      \end{tabular}
+    \end{center}
+    \caption{Größe von Abb. \ref{fig:Eval_Pyramide_Pyramide_Opener_l0} in den einzelnen Pyramidenstufen und die Änderung der Anzahl darin enthaltenen Farben.}
+    \label{table:TabFarbenWeniger}
+  \end{table}
+
+  \noindent Der Effekt der Erhöhung der Farbanzahl, wie in Abb. \ref{fig:PyrMehrFarben} gezeigt, tritt bei Bildern\linebreak (Abb. \ref{fig:KMeansBeispielbild_Bild}) auf, welche vorher bereits einer Reduzierung ihrer Farbanzahl unter\-zogen wurden oder deren Pixel größere Farbunterschiede zu ihren benachbarten Bildpunkten aufweisen.
+  Als Resultat ist die Anwendung der Pyramide, auf Bilder mit einem derartigen Inhalt, mit der Bildung von Mischfarben durch die Durchschnittsbildung und folglich einer teils massiven Erhöhung der Farbanzahl verbunden (Tab. \ref{table:TabFarbenMehr}). Die beabsichtigte Verbesserung der Ausführungsgeschwindigkeit der nachfolgenden Algorithmen bleibt somit nicht nur aus, sondern verschlechtert sich erheblich gegenüber dem Fall, dass sie zur Anwendung auf das farbreduzierte Bild kommen, ohne eine Pyramide einzusetzen.
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{ccc}
+        Pyramidenstufe & Größe der Stufe & Farbanzahl\\
+        0	&	480x320	&	256\\
+        1	&	240x160	&	12468\\
+        2	&	120x80	&	7017
+      \end{tabular}
+    \end{center}
+    \caption{Farbanzahl der Stufen einer Pyramide von Abb. \ref{fig:KMeansBeispielbild_Bild} mit einer deutlichen Erhöhung in Stufe 1.}
+    \label{table:TabFarbenMehr}
+  \end{table}
+
+%\pagebreak
+  Mit der verwendeten Rechnertechnik wurde der zur Erstellung notwendige Zeitbedarf für mehrere Bildgrößen ermittelt und stellt Durchschnittswerte von fünf Durchläufen dar (Tab. \ref{table:TabPyramidenzeit}). Die Erstellungsgeschwindigkeit der größeren Bilder ist, absolut betrachtet, zwar größer als bei kleineren, steigt aber langsamer an als es die Zunahme der Datenmenge nahe legen würde. Als mögliche Ursache dieses Umstandes ist zu vermuten, dass die Erstellung eines Bildes, unabhängig von seiner Größe, von Seiten der Software bzw. des Betriebssystems unbekannten Einflüssen unterliegt, welche bei der Erstellung der kleineren Pyramiden in gewichtigerem Umfang zum Tragen kommen, als bei der Konstruktion der größeren.
+  \begin{table}[h]
+    \begin{center}
+      \begin{tabular}{cccc}
+        Bildgröße & Benötigte Zeit (ms) & Größenverhältnisse & Verhältnis der Zeiten\\
+	2048x2048	& 269	&	256	&	17\\
+        720x576		& 47 	&	25	&	3\\
+	512x512		& 47	&	16	&	3\\
+	128x128		& 15	&	1	&	1\\
+      \end{tabular}
+    \end{center}
+    \caption{Durchschnittlicher Zeitbedarf für die Erstellung einer Pyramide mit vier Stufen, für unterschiedliche Ursprungsbildgrößen (Gemittelt über fünf Durchläufe).}
+    \label{table:TabPyramidenzeit}
+  \end{table}
+
+
+% ------------------------------------------------------------------------------
+  %\paragraph{K-Means}
+  \noindent Für K-Means ist das Konvergenzverhalten anhand des aus Abb. \ref{Eval_KMeans_Testraum} erzeugten Merkmalsraumes leicht ersichtlich, da nach der zufälligen Auswahl der Startpositionen für zwei Centroide alle Durchläufe zum gleichen Ergebnis führen (Abb. \ref{Eval_KMeans_Konvergiert}). Um die korrekte Anzahl der Cluster vorgeben zu können, wurde das Bild so erzeugt, dass zwei Mengen ähnlicher Punkte, mit genügend großem Abstand im Merkmalsraum vorhanden sind. In Verbindung mit der großen Anzahl an schwarzen Pixeln des Hintergrundes befindet sich der Mittelpunkt eines Clusters in der Nähe des Koordinatenursprungs und der andere in der Nähe des gegenüberliegenden Endes des Merkmalsraumes. Aufgrund der bekannten Clusteranzahl und der begrenzten Anzahl an Farben dient dieses Bild nachfolgend als allgemeines Testbeispiel.
+
+  \begin{figure}[!t]
+    \begin{center}
+      \includegraphics[width=3cm]{Bilder/Eval/KMeans/Konvergiert/Testraum}
+      \caption{Testbild für K-Means, welches zwei Objekte zeigt (links oben und rechts unten).}
+      \label{Eval_KMeans_Testraum}
+    \end{center}
+  \end{figure}
+
+  \begin{figure}[!t]
+    \begin{center}
+    \begin{tabular}{lll}
+      \subfloat[]{
+        \label{fig:Eval_KMeans_Konvergiert_Before}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/Konvergiert/CentroidsBeforeKMeans_Zeit12345667890_L0}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_Konvergiert_After}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/Konvergiert/CentroidsAfterKMeans_Zeit12345667890_L0}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_Konvergiert_Quality}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/Konvergiert/KMeans_Quality}
+      }\\
+    \end{tabular}
+    \caption{Für die zusammen dargestellten 1000 Durchläufe (je 10 Iterationen) erfolgt nach der zufälligen Auswahl der Startpositionen der Centroide aus der Menge der Merkmalsvektoren von Abb. \ref{Eval_KMeans_Testraum} (a) die Konvergenz dieser zu den optimalen Positionen (b). Die Veränderung der Qualität zeigt sich in (c).}
+    \label{Eval_KMeans_Konvergiert}
+    \end{center}
+  \end{figure}
+
+  \noindent Die Auswirkungen bei der Wahl der falschen Anzahl an Clustern ist in Abb. \ref{Eval_KMeans_FalscheAnzahl} für je 10 Durchläufe dargestellt. Ein Konvergieren erfolgt zwar weiterhin, aber die beiden vorgegebenen Teilmengen werden auf mehrere Cluster aufgeteilt, wodurch sich deren Abstand zueinander und damit einhergehend der Grad ihrer Separiertheit verringert. Als Resultat verschlechtert sich die Qualität der gesamten Clusterung.
+
+  \begin{figure}[!t]
+    \begin{center}
+    \begin{tabular}{llll}
+      \subfloat[]{
+        \label{fig:Eval_KMeans_FalscheAnzahl_K5}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/FalscheAnzahl/KMeans_Quality_K5}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_FalscheAnzahl_K10}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/FalscheAnzahl/KMeans_Quality_K10}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_FalscheAnzahl_K15}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/FalscheAnzahl/KMeans_Quality_K15}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_FalscheAnzahl_K20}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/FalscheAnzahl/KMeans_Quality_K20}
+      }\\
+    \end{tabular}
+    \caption{Die Qualität verschlechtert sich bei der Einstellung der falschen Clusteranzahl $A_C$. Die optimale Clusteranzahl für Abb. \ref{Eval_KMeans_Testraum} liegt bei zwei (siehe Abb. \ref{fig:Eval_KMeans_Konvergiert_Quality}). Dargestellt sind die Auswirkungen bei (a) mit $A_C=5$, (b) mit $A_C=10$, (c) mit $A_C=15$ und (d) mit $A_C=20$. Es wurden jeweils 10 Durchläufe mit $|I_\textrm{KMeans}| = 10$ durchgeführt.}
+    \label{Eval_KMeans_FalscheAnzahl}
+    \end{center}
+  \end{figure}
+
+  \begin{figure}[!b]
+    \begin{center}
+    \begin{tabular}{llll}
+      \subfloat[]{
+        \label{fig:Eval_KMeans_ChoosenCentroids_l0}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/ChoosenCentroids_t0_L0}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_CentroidsBeforeKMeans}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/CentroidsBeforeKMeans}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_KMeans_CentroidsResultSpace}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/CentroidsResultSpace}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_Means_ResultSpace}
+        \includegraphics[width=3cm]{Bilder/Eval/KMeans/ResultSpace}
+      }
+    \end{tabular}
+    \caption{Aus der Menge der Kandidaten (a) weden die besten sechs bestimmt (b) und es erfolgt durch K-Means die Verbesserung der Centroidpositionen. Beispielsweise (c) werden die im rechten oberen Bereich des Raumes befindlichen Centroide großen Änderungen unterzogen, während die beiden Centroide in der Nähe der R-Achse ihre Positionen nahezu beibehalten. Als Resultat ist eine gute Zerlegung des Merkmalsraumes von Abb. \ref{Eval_Pyramide_Aufbau} in Cluster (c) vorhanden.}
+    \label{Eval_Means_Result}
+    \end{center}
+  \end{figure}
+
+  Der notwendige Zeitbedarf wurde für mehrere Größen von Merkmalsräumen ermittelt und stellt Durchschnittswerte von fünf Durchläufen dar (Tab. \ref{table:TabMerkmalszeit}), wobei mit $|I_\textrm{KMeans}| = 100$ eine Minimierung systembedingter Effekte wie bei der Pyramidenerstellung erreicht werden soll. 
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{cccc}
+        \parbox{2.7cm}{\begin{center}Anzahl der\\Merkmalsvektoren\end{center}} & Benötigte Zeit (ms) & Größenverhältnisse & Verhältnis der Zeiten\\
+        48705		& 109041	& 190	& 1212\\
+	15933		& 6947		& 62	& 77\\
+	256		& 90  		& 1	& 1\\
+      \end{tabular}
+    \end{center}
+    \caption{Durchschnittlicher Zeitbedarf für die Durchführung von 100 Iterationen für unterschiedliche Anzahlen an Merkmalsvektoren (Gemittelt über fünf Durchläufe mit $A_C = 20$).}
+    \label{table:TabMerkmalszeit}
+  \end{table}
+
+%  \begin{figure}[!t]
+%    \begin{center}
+%      \includegraphics[width=3cm]{Bilder/Eval/KMeans/Quality_Iter}
+%      \caption{
+%      }
+%      \label{Eval_KMeans_Quality_Iter}
+%    \end{center}
+%  \end{figure}
+
+  Wie zu erkennen ist, steigt der Zeitbedarf beträchtlich schneller an als die Anzahl der Merkmalsvektoren.\\
+
+% ------------------------------------------------------------------------------
+%  \paragraph{PSO}
+  \noindent Mit Hilfe des Merkmalsraumes von Abb. \ref{Eval_KMeans_Testraum} kann das Verhalten der Partikel Schwarm Opimierung verdeutlicht werden (Abb. \ref{Eval_PSO_Konvergiert}). Obwohl die Anzahl an Clustern, welche durch jedes Partikel bestimmt wurde, mit 2 korrekt ist, bleibt als Ergebnis zwar eine Annäherung an die exakten Position festzuhalten, aber auch eine Streuung um diese Positionen herum. 
+  
+  Dies erklärt sich zum einen daraus, dass die Menge der Kandidaten nicht die Merkmalsvektoren umfassen muss, welche diese beste Lösung darstellen. Da die Suche der Partikel aber auf diese Kandidatenmenge beschränkt ist, kann folglich nur eine Annäherung durchgeführt und eine der guten Lösungen gewählt werden. Im Umfeld der besten Lösung ist eine Vielzahl von guten Lösungen relativ wahrscheinlich, woraus diese Verteilung resultiert.
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{ccc}
+  	Position $\vec{x}_s(t_P)$ & Qualität von $\vec{y}_s(t_P)$	& Anzahl unterschiedlicher Bits\\
+	0000000101	& 0,221734494	& 0\\
+	0000001101	& 1,219101548	& 1\\
+	1000000101	& 91,140678406	& 1\\
+	1111100000	& 0,873590946	& 7\\
+      \end{tabular}
+    \end{center}
+    \caption{Der Wechsel eines Bits des Positionsvektors aus der ersten Zeile kann sowohl in einer geringfügigen (Zeile zwei) als auch in einer beträchtlichen Änderung (Zeile drei) der Qualität resultieren. Andererseits führen selbst massive Umstellungen am Positionsvektor nur zu kleinen Verschlechterungen (Zeile vier).}
+    \label{table:TabPositonsqualität}
+  \end{table}
+
+  Zum anderen verfügt der Schwarm über keine direkten Informationen bezüglich des Merkmalsraumes, sondern nur über seinen daraus gebildeten Suchraum. Als Resultat führen kleine Änderungen der Partikelpositionen zu teilweise erheblichen Qualitätsänderungen (Tab. \ref{table:TabPositonsqualität}) und erschweren so eine zielgerichtetere Suche.
+
+  \begin{figure}[!t]
+    \begin{center}
+    \begin{tabular}{lll}
+      \subfloat[]{
+        \label{fig:Eval_PSO_Konvergiert_Choosen}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Konvergiert/ChoosenCentroids_Zeit12345667890_L0}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Konvergiert_BestSolutionPos}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Konvergiert/BestSolutionPos_t0_L0}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Konvergiert_PartikelDevelopment}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Konvergiert/PartikelDevelopment}
+      }\\
+    \end{tabular}
+    \caption{Die dargestellten 20 Durchläufe (je 50 Iterationen mit 100 Partikeln) beginnen mit (a) der zufälligen Auswahl von 10 Kandidaten aus der Menge der Merkmalsvektoren von Abb. \ref{Eval_KMeans_Testraum}. Das Ergebnis der Suche nach der optimalen Position zeigt sich in (b) und die Veränderung der Qualität in (c).}
+    \label{Eval_PSO_Konvergiert}
+    \end{center}
+  \end{figure}
+
+  Ein Vergleich der Schwarmgröße in Bezug auf das Konvergenzverhalten (Abb. \ref{Eval_PSO_Schwarmgroesse}) offenbart, wie in \cite{Omran2005} erwähnt, nur einen geringen Einfluss der Schwarmgröße auf das Konvergenzverhalten. Der wesentliche Teil der Optimierung vollzieht sich in den untersuchten Fällen innerhalb der ersten 10, höchstens 20, Iterationsschritte und bleibt anschließend nahezu konstant. Der notwendige Zeitaufwand steigt bis $A_\mathbb{S}=100$ etwa linear an (Tab. \ref{table:TabSchwarmgroesse}).
+  Wie auch K-Means steigt der Aufwand allerdings rapide mit der Anzahl an Merkmalsvektoren an (Tab. \ref{table:TabProblemgroesse}).
+
+  \begin{figure}[!b]
+    \begin{center}
+    \begin{tabular}{llll}
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S10}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S10/PartikelDevelopment}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S20}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S20/PartikelDevelopment}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S30}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S30/PartikelDevelopment}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S40}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S40/PartikelDevelopment}
+      } \\
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S50}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S50/PartikelDevelopment}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S100}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S100/PartikelDevelopment}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_PSO_Schwarmgroesse_S200}
+        \includegraphics[width=3cm]{Bilder/Eval/PSO/Schwarmgroesse/S200/PartikelDevelopment}
+      } 
+      \\
+    \end{tabular}
+    \caption{Die dargestellten 20 Durchläufe (je 50 Iterationen) umfassen Schwärme mit (a) 10 (b) 20 (c) 30 (d) 40 (e) 50 (f) 100 und (g) 200 Partikeln und zeigen deren Konvergenzverhalten.}
+    \label{Eval_PSO_Schwarmgroesse}
+    \end{center}
+  \end{figure}
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{cccc}
+  	Schwarmgröße $A_\mathbb{S}$ & Benötigte Zeit (ms) & Verhältnis der Zeiten\\
+	10 & 317 & 1\\
+	20 & 579 & 1,8\\
+	30 & 863 & 2,7\\
+	40 & 1133 & 3,6\\
+	50 & 1380 & 4,4\\
+	100 & 2906 & 9,2\\
+	200 & 13534 & 42,7\\
+      \end{tabular}
+    \end{center}
+    \caption{Das Verhältnis der Zeiten offenbart einen linearen Anstieg des Zeitaufwandes bis zu einer Schwarmgröße von etwa 100 Partikeln.}
+    \label{table:TabSchwarmgroesse}
+  \end{table}
+
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{cccc}
+  	$A_\mathbb{D}$ & Benötigte Zeit (ms) & Größenverhältnis &  Verhältnis der Zeiten\\
+	216 & 579 & 1 & 1\\
+	15933 & 8181 & 73.8 & 14.1\\
+	48705 & 98360 & 84.1 & 170 \\
+      \end{tabular}
+    \end{center}
+    \caption{Der Einfluss der Anzahl der Merkmalsvektoren auf die Verarbeitungszeit wurde für 20 Durchläufe mit je 50 Iterationen und 20 Partikel für drei Bilder (\ref{Eval_KMeans_Testraum}, \ref{BspGrass}, \ref{BspGrain}) mit entsprechenden Farbanzahlen berechnet.}
+    \label{table:TabProblemgroesse}
+  \end{table}
+  
+  \begin{table}
+    \begin{center}
+      \begin{tabular}{ccc}
+  	Iterationsanzahl & Benötigte Zeit (ms) & Verhältnis der Zeiten\\
+	10 & 6863 & 1\\
+	15 & 6955 & 1\\
+	20 & 7052 & 1	 
+      \end{tabular}
+    \end{center}
+    \caption{Laufzeit bei unterschiedlicher Anzahl an Iterationsschritten (für 20 Durchläufe mit je 10 Partikeln und 15933 Farben gemittelt).}
+    \label{table:TabIterPSO}
+  \end{table}
+
+  \noindent Die Änderung der Iterationsschrittanzahl zieht nur eine sehr geringe Erhöhung der Ausführungszeit mit sich, wie in Tab. \ref{table:TabIterPSO} erkennbar ist.
+
+  \begin{figure}[!t]
+    \begin{center}
+    \begin{tabular}{ll}
+      \subfloat[]{
+        \label{fig:Eval_Bilder1}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Bilder/B2}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_VBilder2}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Bilder/B1}
+      }\\
+    \end{tabular}
+    \caption{Die Bilder zeigen das Segmentierungsergebnis für das Bild aus Abb. \ref{fig:KMeansBeispielbild_Bild}. In (a) erfolgt die Farbgebung aller Punkte eines Segmentes nach dem Farbwert, welcher durch den Centroiden repräsentiert wird, und (b) durch eine zufällige Farbe je Segment.}
+    \label{Eval_Bilder}
+    \end{center}
+  \end{figure}
+
+
+
+
+%  Einfluss von 
+%  c1, c2, w, wInit, vRange, PyrLevel auf Quali und Geschw.\\
+%
+%  Berechnung von $20 x (I_{PSO}=100, A_C=20)$ $\Rightarrow$ 6563
+%
+%  Für alle Test $c_1=c_2=1,49$, $w_init = 0,75$, $w=0,72$, $anneling=0,99$, $history=ring=n=1$, $v_max=5$, $Kmax=10$
+
+
+\section{Videosequenzen}
+  Bedingt durch das massive Datenaufkommen in Form von Einzelbildern mit großer Farbanzahl war eine Evaluation nur für einzelne Bilder der Videos durchführbar. Diese wurden extrahiert und als einzelne Bilder einer Betrachtung unterzogen, wie an Abb. \ref{fig:Eval_Pyramide_Pyramide_Opener_l0} zu erkennen. Eine Untersuchung und Segmentierung des Videomaterials wie in \cite{Chen2007} konnte nicht durchgeführt werden, da bereits bei einer Betrachtung von drei aufeinanderfolgenden Einzelbildern die Bearbeitungszeit eine nicht mehr handhabbare Größenordnung ereichte. Eine derart kurze Folge von Bildern ist aber zu kurz um eine Vorder- und Hintergrundtrennung wie in \cite{Chen2007} zu erreichen, da sie meist aus Bildern besteht, welche sich nur geringfügig unterscheiden. Gemessen werden konnte die Bearbeitungszeit für ein einzelnes Bild mit ca. 6 Minuten und ein Bild einer Dreierfolge mit bis zu 30 min.
+  
+  \begin{figure}[!t]
+    \begin{center}
+    \begin{tabular}{lll}
+      \multicolumn{3}{c}{
+      \subfloat[]{
+        \label{fig:Eval_Videoframe1}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Video/V1}
+      } 
+      \subfloat[]{
+        \label{fig:Eval_Videoframe2}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Video/V2}
+      }} \\
+      \subfloat[]{
+        \label{fig:Eval_Videoframe2}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Video/VB_1}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_Videoframe2}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Video/VB_2}
+      } &
+      \subfloat[]{
+        \label{fig:Eval_Videoframe2}
+        \includegraphics[width=3cm]{Bilder/Eval/Beispielbilder/Video/VB_3}
+      } 
+    \end{tabular}
+    \caption{Die Bilder stellen einzelne Teile einer Videosequenz dar, wobei die Segmente in den Bildern (a) und (b) mit den Farbwerten der Centroide, in (c), (d) und (e) hingegen mit Falschfarben dargestellt sind.}
+    \label{Eval_Videoframe}
+    \end{center}
+  \end{figure}
+ 

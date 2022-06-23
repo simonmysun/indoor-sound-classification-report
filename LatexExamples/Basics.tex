@@ -1,0 +1,530 @@
+\chapter{Basics}
+  Below functional terms and aspects will be explained and necessary\linebreak 
+  demands for the procedure in chapter \ref{Verfahren} are revealed.
+
+\section{Common Term Definitions}
+  A \textit{Picture} $P$ (Abb. \ref{Bildmatrix}) is represented by a two dimensional map in the form of a matrix with the height $H$ and the width $B$, consisting of pixels (Pixeln $p_{ij}$)\linebreak, whereby $A_P$ corresponds to the number of pixels and is calculated by $A_P = H\cdot B, A_P\in\mathbb{N}$.  
+
+  The value of each \textit{pixel} $p_{ij}$, whereby $i$ represents the row and $j$ the column, is dependent on the used grey-levels or colour model (discrete or real) limited to a predefined co-domain $W$ and assigned to the corresponding brightness value or hue. \cite{Ste02}
+   \cite{Ste02}
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=5cm]{Bilder/Bildmatrix}
+    \caption{Structure of a Picture. \cite{Wilhelm2005}}
+    \label{Bildmatrix}
+  \end{figure}
+  
+  \noindent Within this task follows the limitation to a discrete colour model $W\subseteq\mathbb{N}$, so that $P$ can be formal written as:
+  \begin{equation}\label{DefBild}
+    P = (p_{ij}), 
+    \quad\begin{array}{l}
+      0\leq i < H, H\in\mathbb{N}\\
+      0\leq j < B, B\in\mathbb{N}\\
+      \forall i\in\{0, ..., H-1\}\textrm{\space} \forall j\in\{0, ..., B-1\}:p_{ij}\in W
+    \end{array}
+  \end{equation}
+
+  \noindent Also dependent on the respective grey-levels or colour model are the \linebreak number $A_F, A_F\in\mathbb{N}$ and the cardinality $|F_f|$ of the single channels $F_f, 0\leq f < A_F,$\linebreak$\forall f:F_f\subseteq\mathbb{N}$, which together determine the cardinality of the colour model
+  \begin{equation}
+    |W| = \prod\limits_{f=0}^{A_F-1} |F_f|
+  \end{equation} resp. 
+  \begin{equation}
+    p_{ij} = \sum\limits_{f=0}^{A_F-1} w_{fij}\cdot \prod\limits_{a=0}^{f-1}|F_a|,
+    \qquad
+    \begin{array}{l}
+      0\leq i < H, H\in\mathbb{N}\\
+      0\leq j < B, B\in\mathbb{N}\\
+      \forall f:(w_{fij}\in[0, |F_f|-1] \wedge w_{fij}\in\mathbb{N})
+    \end{array}
+  \end{equation}
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=5cm]{Bilder/RGB_Farbwuerfel3}
+    \caption{RGB-Farbraum. \cite{DMA08}}
+    \label{RGBFarbwuerfel}
+  \end{figure}
+
+  \noindent ($w_{fij}$ corresponds to the proportion of this (colour-) channel at the pixel $p_{ij}$).\linebreak 
+  In the RGB-model, frequently used by computers, these correspond to the primary colours red $F_r$, green $F_g$ and blue $F_b$ (equivalent to $F_0$, $F_1$, $F_2$) and mostly have the cardinality $2^8 = 256$. In this way a cubical colour space is spanned (Figure \ref{RGBFarbwuerfel}) with overall $2^{3\cdot8} = 16777216$ possible different colour hues, whose volume equals the cardinality. 
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=\textwidth]{Bilder/Pferdbildfolge2}
+    \caption{Sequence of nine single pictures. \cite{Pferd08}}
+    \label{Pferdbildfolge}
+  \end{figure}\\
+
+  \noindent A \textit{picture sequence} $P(t)$ is a sequence of pictures (Figure \ref{Pferdbildfolge}), whereas $T$ states the number of pictures.
+  The formula \ref{DefBild} therefore extends to: \cite{Ste02}
+  \begingroup
+  \everymath{\scriptstyle}
+  \large
+  \begin{equation}\label{DefBildfolge}
+    P(t) = (p_{ijt}), 
+    \quad\begin{array}{l}
+      0\leq i < H, H\in\mathbb{N}\\
+      0\leq j < B, B\in\mathbb{N}\\
+      0\leq t < T, T\in\mathbb{N}\\
+      \forall i\in\{0, ..., H-1\}\forall j\in\{0, ..., B-1\}\forall t\in\{0, ..., T-1\}:p_{ijt}\in W
+    \end{array}
+  \end{equation}
+  \endgroup\\
+
+  \noindent The \textit{Sigmoid function} $sig(x)$ figures the domain of definition $[-\infty,+\infty]$ on the\linebreak interval $[0, 1]$ (Figure \ref{Sigmoidfunktion}) and is defined by: \cite{Omran2006}
+  \begin{equation}\label{DefSigmoid}
+    sig(x)=\frac{1}{1+e^{-x}}
+  \end{equation}
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=4cm]{Bilder/Sigmoid}
+    \caption{Sigmoidfunktion.}
+    \label{Sigmoidfunktion}
+  \end{figure}
+
+  \noindent A function $U(0,1)$ by definition delivers an equally distributed random number in the\linebreak interval $[0, 1]$ \cite{Omran2006}.
+
+% --- Pyramide -----------------------------------------------------------------
+\section{Pyramid}
+  Some finer structures in the picture require the full resolution, while coarser structures stay perceptible at a lower resolution. This leads to the fact, that image data\linebreak are displayed in different resolutions (Figure \ref{Pyramidengrafik}), to enable a considerable acceleration of the image processing algorithm through a lower amount of\linebreak data at lower resolution. \cite{Jaehne2002} 
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=9.4cm]{Bilder/Pyramidengrafik}
+    \caption{Pyramide mit $PL=7$ und $PF=2$.}
+    \label{Pyramidengrafik}
+  \end{figure}
+
+\subsubsection{Construction}
+ By applying the formula \ref{DefPyramidenformel} onto the original image ($l=0$) the values of the next resolution step ($l=1$) is computable. $PF$ indicates the number of pixels in a row resp. column, on which the forming of average, for the calculation of the new value, is applied (with $PF>1, PF\in\mathbb{N}$). Through successive reapplication onto the so created data, a as \textit{pyramid} denoted sequence, as in Figure \ref{Pyramidengrafik} displayed, is formed. The size of the picture in the $l$-th level accounts in the width to $B^l = \lceil\frac{B^{l-1}}{PF}\rceil$ and in the height to $H^l = \lceil\frac{H^{l-1}}{PF}\rceil$ with $B^l,H^l\in\mathbb{N}$. \glqq From one [...] picture [...] only one pyramid with $[\log_{PF}{(\max(B,H))}]$ levels can be calculated.\grqq\space\cite{Jaehne2002}
+ 
+  \noindent As the topmost level only consists of one single pixel and the bottommost level corresponds to the original image, a limitation to $PL$ levels is useful, with $0 < PL < \log_{PF}{(\max(B,H))}, PL\in\mathbb{N}$.
+  \begin{equation}\label{DefPyramidenformel} 
+    p^{l+1}_{ij} = \frac{1}{PF^2}\sum\limits_{m=0}^{PF-1}\sum\limits_{n=0}^{PF-1}p^{l}_{(i\cdot PF+m)(j\cdot PF+n)}
+    \quad
+    \begin{array}{l}
+       0\leq l, l\in\mathbb{N}\\
+       0\leq i< H^{l+1}\\
+       0\leq j< B^{l+1}\\
+       p_{ab}^l:=0,
+       \begin{array}{l}
+         \forall a\notin\{0, ..., H^l-1\}\\
+	 \forall b\notin\{0, ..., B^l-1\}
+       \end{array}
+    \end{array}
+  \end{equation}
+
+% --- PSO ----------------------------------------------------------------------
+\section{Particle Swarm Optimization (PSO)}
+  Optimization denotes \glqq mathematical procedures, that calculate the minimum [...] of a [...] target function [$Q(x)$] under limiting constraints \grqq\space\cite{Bartsch1997}.\linebreak In some circumstances the search for this optimal solution requires a disproportionate high effort, but only delivers a low improvement for a good result. Therefore special procedures (\textit{heuristics}) are used, which in general deliver good results, but don't require the effort that would be necessary for the search for the best solution.
+  
+  The particle swarm optimization  is a heuristic, iterative procedure,\linebreak which shapes the behavior of herds of animals, that means their self organization, group building, communication etc. \cite{Eberhart2001}.
+
+\subsection{Components}
+\subsubsection{Swarm}
+  A \textit{swarm} $\mathbb{S}$ is a set of nearly equal individuals - particles-, that moves through the search space, to find an optimal solution, where $A_\mathbb{S}$ denotes the cardinality of the swarm \cite{Omran2005}.
+
+  \begin{equation}
+    A_\mathbb{S} = \sum\limits_{s\in\mathbb{S}}1
+  \end{equation}
+
+  \noindent As analogy to feral herds there is no central control system or \linebreak coordination of the single members, which increases the failure safety \linebreak and limits the problems mostly onto the single individual. These individuals don't necessarily need to be able to make wide, prescient or complex decisions, own more memory than a minimum or be capable of more intelligent behavior. \cite{Eberhart2001, DMap2004}
+  
+  An exchange of information with others however is given. Its type and design wields an essential influence on the swarm. Therefore a decay into several independent parts (groups of individuals) as well as a merger are possible. It determines the extent of imitation of the best particles by others and therefore also the speed with which a solution can be found, a good one can be passed on or a bad one can be discarded. 
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=10cm]{Bilder/Vogelschwarm}
+    \caption{Vogelschwarm. \cite{Vogel08}}
+    \label{Vogelschwarm}
+  \end{figure}
+
+  As shown in figure \ref{Vogelschwarm}, formations emerge after an initial phase\linebreak of random movements 
+  
+  So entstehen Formationen, wie in Abb. \ref{Vogelschwarm} gezeigt, dadurch, dass, nach einer\linebreak Anfangsphase zufälliger Bewegungen, jeder eine Verbesserung bzgl. seiner Ziel\-funktion in einer bestimmten Richtung vermutet und sich dorthin bewegt. In \cite{Eberhart2001} wird dargestellt, dass gegenseitige Annäherung und damit einhergehend auch die\linebreak Angleichung von Geschwindigkeit, Richtung und Höhe, Vorteile dahingehend bietet,\linebreak dass der Informationsaustausch leichter stattfinden und damit der Aufwand die Umgebung zu untersuchen besser auf den Schwarm verteilt werden kann. So sind Fressfeinde, Futterquellen und Ruheplätze schneller erkennbar, was die eigenen Überlebenschancen verbessert. Außerdem zeigt sich, dass diese Vorteile die Nachteile, wie das Teilen einer Futterquelle, überwiegen.
+  
+  For the optimization this behavior is desirable, as in the surrounding of a good solution also better ones exist and can be searched by several particles respectively more precisely. Also the susceptibility to errors or the failure of single individuals decreases, as unconcerned individuals keep on seeking for an improvement.
+ 
+  The swarms autonomous organization leads to the fact, that\linebreak besides a suitable target function and, in some circumstances, communication there are no further\linebreak adaptions in the search space necessary. \cite{Eberhart2001}
+ 
+\subsubsection{Particle}\label{Particle Description}
+  The \textit{particle} $s$ is part of a swarm $\mathbb{S}$, which only differentiates from others by its current inner conditions and only has limited\linebreak abilities. Each particle represents a possible solution of the \linebreak optimization problem in the search space. \cite{Eberhart2001}
+
+  The conditions of a particle $s$, represented by vectors, covers the current \linebreak position $\vec{x}_s(t_P)$ and the as yet best position found $\vec{y}_s(t_P)$, as well as the\linebreak direction of motion $\vec{v}_s(t_P)$ at the moment of iteration $t_P\in I_\textrm{PSO}$, 
+  
+  Die Zustände eines Partikels $s$, dargestellt durch Vektoren, umfassen die aktuelle\linebreak Position $\vec{x}_s(t_P)$ und die bisher beste selbstgefundene Position $\vec{y}_s(t_P)$, sowie die\linebreak Bewegungsrichtung $\vec{v}_s(t_P)$ zum Iterationszeitpunkt $t_P\in I_\textrm{PSO}$, wobei $|I_\textrm{PSO}|$ der Gesamtanzahl aller Iterationsschritte der Partikel Schwarm Optimierung entspricht.
+
+\subsubsection{Nachbarschaft}
+  Lebewesen, insbesondere solche, die in Gemeinschaften leben, erhalten Informationen auf unterschiedliche Weise von anderen, sei es durch eine Art direkter Kommunikation oder z.B. durch deren Beobachtung. Sie gehen somit eine, eventuell nur zeitweise vorhandene, Beziehung miteinander ein, wobei deren Nutzen für die Beteiligten nicht in gleichem Maße gegeben sein muss. Schlechtere Mitglieder lernen von erfolgreicheren, möglicherweise ohne dass diese direkt eine Gegenleistung erhalten. Allerdings bleiben erstere der Gruppe erhalten und erhöhen somit die Überlebenschancen aller, also auch die der letzteren. Um den positiven Effekt zu nutzen, wird das Prinzip des\linebreak Informationstransfers sinngemäß übernommen und bei Partikelschwärmen angewandt um die Optimierungsqualität bezüglich der Zielfunktion zu erhöhen. \cite{Eberhart2001}
+ 
+  Die Menge der Partikel, welche die Informationen für $s$ liefern, gehört zum Schwarm und bildet eine Untergruppe, welche als \textit{Nachbarschaft} $N_s$ von $s$ bezeichnet wird ($N_s\subseteq \mathbb{S}$). Deren Topologie der Kommunikation beeinflusst, wie durch Forschungen\linebreak gezeigt wurde, die Leistungsfähigkeit des Verfahrens beträchtlich, weshalb einige\linebreak unterschiedliche Modelle im Folgenden näher dargestellt werden. \cite{Eberhart2001, Huang2005}
+
+\paragraph{$\bullet$ Indexnachbarschaften}
+  Die ersten lassen sich dadurch charakterisieren, dass alle $s\in\mathbb{S}$ durchnummeriert sind und diese Nummerierung über die Nachbarschaftszugehörigkeit entscheidet. 
+
+\subparagraph{1. Global best (gbest):}
+  Wird eines der einfachsten Nachbarschaftsgebilde\linebreak genannt, bei der eine Verbindung zu allen Mitgliedern des Schwarms\linebreak besteht (Abb. \ref{Topologie_Alle} und Formel \ref{DefGBest}). Somit werden die Entscheidungen des Partikels vom besten beeinflusst. \cite{Huang2005, Eberhart2001}
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=4cm]{Bilder/N_N_Topologie}
+    \caption{gbest Topologie mit $A_\mathbb{S} = 9$.}
+    \label{Topologie_Alle}
+  \end{figure}
+  \begin{equation}\label{DefGBest}
+    N_s = \mathbb{S}
+  \end{equation}
+
+\subparagraph{2. Local best (lbest):}
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=4cm]{Bilder/Ring}
+    \caption{lbest Nachbarschaftstopologie mit $n=1$.}
+    \label{Topologie_Ring}
+  \end{figure}
+  Entsteht durch die Nummerierung, $s_i, 0\leq i\leq A_\mathbb{S}-1$, eine kreisförmige Anordnung der Partikel und die Einschränkung der Kommunikation auf die von $s_i$ aus nächstgelegenen $n$ linken und $n$ rechten Nachbarn (Formel \ref{DefLBest}), wie in Abb. \ref{Topologie_Ring} dargestellt. \cite{Huang2005}
+  \begin{equation}\label{DefLBest}
+    N_{s_i} = \{s_j\in\mathbb{S} \textrm{\space}\vert\textrm{\space}|j-i| \leq n \textrm{\space}\vee\textrm{\space} |j-i| \geq A_\mathbb{S}-n \}
+  \end{equation}
+  
+  \noindent Die Wahl von $n = \lfloor\frac{A_\mathbb{S}}{2}\rfloor$ ergibt den Spezialfall \textit{gbest} und $n=1$ einen Ring (Abb. \ref{Topologie_Ring}).\linebreak Mit $n=0$ degeneriert der Schwarm zu einer Menge eigenständig agierender Individuen, welcher zumeist schlechtere Ergebnisse liefert.
+  
+  Die Entscheidungen eines Partikels werden vom Besten innerhalb von $N_s$ bestimmt. Der Informationsfluss über das Auffinden einer neuen besten Position ist also langsamer und kann, je nach Größe von $n$ bis zu $\lfloor\frac{A_\mathbb{S}}{2}\rfloor$ Iterationen dauern. \cite{Eberhart2001}
+
+\subparagraph{3. von Neumann:}
+  Die Nachbarschaft $N_{s_{ik}}$ ergibt sich durch die Durchnummerierung der Partikel $s_{ik}, i\in\{0, ..., r-1\}, k\in\{0, ..., \frac{A_\mathbb{S}}{r}-1\}, A_\mathbb{S}\bmod r\equiv 0, r\in\mathbb{N}$, des Schwarms und Formel \ref{DefTorus}.
+  Der Informationsfluss ist hier im Allgemeinen langsamer als bei \textit{gbest}, aber schneller als bei \textit{lbest}. \cite{Huang2005}
+  \begin{equation}\label{DefTorus}
+    \begin{array}{ll}
+      N_{s_{ik}} = & \{s_{jk}\in\mathbb{S} \textrm{\space}\vert\textrm{\space}|j-i| \leq n \vee |j-i| \geq r-n \}\textrm{\space}\cup\\
+      		& \{s_{il}\in\mathbb{S} \textrm{\space}\vert\textrm{\space}|l-k| \leq n \vee |l-k| \geq \frac{A_\mathbb{S}}{r}-n\}\\
+    \end{array}
+  \end{equation}
+  
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=6cm]{Bilder/Torus}
+    \caption{Nachbarschaftstopologie nach v.Neumann.}
+    \label{Topologie_Torus}
+  \end{figure}
+  \noindent Diese Topologie kann als ein auf die Oberfläche eines Torus projiziertes Gitternetz betrachtet werden.
+  So dargestellt repräsentiert jeder Schnittpunkt des Gitters ein Partikel, und die in horizontaler und vertikaler Richtung angrenzenden Partikel formen dessen Nachbarschaft $N_{s_{ik}}$ (Abb. \ref{Topologie_Torus}).
+
+\paragraph{$\bullet$ Nachbarschaft im Suchraum}
+  Weiterhin ist es möglich die Entfernung im Suchraum als Kriterium für die Nachbarschaftstopologien zu benutzen (Abb. \ref{Topologie_Ortsnachbar}).
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=5cm]{Bilder/Ortsnachbar}
+    \caption{$n_1, n_2$ sind Nachbarn von $s$ da ihr euklidischer Abstand weniger\newline als $r$ beträgt. $n_3$ und $n_4$ sind hingegen zu weit entfernt.}
+    \label{Topologie_Ortsnachbar}
+  \end{figure}
+  
+  Die Definition der Entfernungsfunktion $E(\vec{x}_s(t_P),\vec{x}_n(t_P))$, welche ein Maß für die Distanz von $\vec{x}_s(t_P)$ zu $\vec{x}_n(t_P)$ liefert, kann dabei wiederum unterschiedlich erfolgen, wobei diejenigen Partikel $n\in\mathbb{S}$ als Nachbarn von $s\in\mathbb{S}$ betrachtet werden, deren Position $\vec{x}_n(t_P)$ zur Position $\vec{x}_s(t_P)$ einen kleineren Abstand als den Wert $r\in\mathbb{R}$ aufweisen, also:
+  \begin{equation}\label{DefOrtsnachbar}
+      N_s = \{n \textrm{\space}\vert\textrm{\space} n\in\mathbb{S}, \textrm{\space} E(\vec{x}_s(t_P),\vec{x}_n(t_P)) < r \}, \quad s\in\mathbb{S}\\
+  \end{equation}
+
+  \noindent Die Beeinflussung durch andere Schwarmmitglieder hängt hierbei von deren relativer Position im Suchraum ab (Abb. \ref{Topologie_Ortsnachbar}), da ein direkter Kontakt mit dem Besten des Schwarms ebenso möglich ist wie eine Unterbrechung jeglicher Verbindung durch zu große Entfernung. \cite{Eberhart2001}
+
+\subsection{Algorithmus}
+\subsubsection{Ablauf}
+  Jedem Partikel $s$ eines gegebenen Schwarms $\mathbb{S}$ sind zum Iterationszeitpunkt $t_P$ die eigene Position $\vec{x}_s(t_P)$, die bisher beste selbstgefundene Position $\vec{y}_s(t_P)$ und sein Bewegungsvektor $\vec{v}_s(t_P)$ bekannt, welche unter dem Einfluss der Qualität von $\vec{x}_s(t_P)$, der Qualität von $\vec{y}_s(t_P)$ und den Erkenntnissen aus der Nachbarschaft $N_s$ zu den neuen Werten $\vec{x}_s(t_P+1)$, $\vec{y}_s(t_P+1)$ und $\vec{v}_s(t_P+1)$ aktualisiert werden.
+
+  Dazu erfolgt in jedem Schritt nach der Ermittelung der Qualität des gegenwärtigen Standpunktes $Q(\vec{x}_s(t_P))$ der Vergleich mit $Q(\vec{y}_s(t_P))$. Dabei stellt $Q(x)$ das Qualitätsmaß dar und liefert kleine Werte für hohe und große Werte bei niedriger Qualität, was folglich zu minimieren ist. Nur wenn eine Verbesserung eintritt, wird der augenblickliche Ort als neue beste Position für den nachfolgenden Schritt verwendet, andernfalls findet eine Übernahme des bisherigen Wertes statt. Somit ergibt sich die beste gefundene Position zum Zeitpunkt $t_P+1$ zu:
+  \begin{equation}\label{DefMyBestPos}
+    \vec{y}_s(t_P+1) = \begin{cases}
+    		 \vec{y}_s(t_P) &: Q(\vec{x}_s(t_P)) \geq Q(\vec{y}_s(t_P))\\
+		 \vec{x}_s(t_P) &: Q(\vec{x}_s(t_P)) < Q(\vec{y}_s(t_P))\\
+	       \end{cases}
+  \end{equation}
+  
+  \noindent Aus der Nachbarschaft $N_s$, von $s$ eruiert sich zusätzlich $\hat{\vec{y}}_s(t_P+1)$ als beste darin\linebreak bekannte Position, wobei im Falle des Vorhandenseins mehrerer Positionen mit\linebreak minimaler Qualität diejenige mit dem kleinsten Index gewählt wird.
+  \begin{equation}\label{DefLokalBestPos}
+    \begin{array}{ll}
+      \hat{\vec{y}}_s(t_P+1) &= \vec{y}_n(t_P+1),\\
+      &\textrm{mit \space} Q(\vec{y}_n(t_P+1)) = \min_{m\in N_s}(Q(\vec{y}_m(t_P+1))),\textrm{\space} n\in N_s
+    \end{array}
+  \end{equation}
+
+  \noindent Darauf aufbauend folgt die Anpassung des Bewegungsvektors durch die Berechnung jeder $j$-ten Komponente $v_{sj}(t_P+1)$ mittels:
+  \begin{equation}\label{DefVUpdate}
+    \begin{array}{ll}
+      v_{sj}(t_P+1) =& wv_{sj}(t_P)\\
+      		     & + c_1r_{1j}(t_P)(y_{sj}(t_P+1)-x_{sj}(t_P))\\
+		     & + c_2r_{2j}(t_P)(\hat{y}_{sj}(t_P+1)-x_{sj}(t_P))\\
+    \end{array}
+  \end{equation}
+  Die Summe bildet sich aus dem bisherigen mit dem Faktor $w$ gewichteten Wert, dem Produkt welches den Einfluss der besten selbstgefundenen Position entspricht und einem Term, der die Stärke der besten innerhalb der Nachbarschaft bekannten Position beschreibt. Als Einflussfaktoren auf die Produkte fungieren die vorgegebenen Größen $c_1$ und $c_2$, sowie die gleichverteilt zufälligen Werte $r_{1j}(t_P),r_{1j}(t_P)\sim U(0,1)$\linebreak und $r_{2j}(t_P),r_{2j}(t_P)\sim U(0,1)$. Eine Beschränkung von $v_{sj}(t_P+1)$ auf das\linebreak Intervall $\lbrack -v_{\textrm{max}}, v_{\textrm{max}}\rbrack$ verhindert extreme Bewegungen des Partikels.  
+
+  Die Variable $w$ stellt das Ausmaß der Trägheit dar, mit der die bisherige Richtung beibehalten wird. $c_1$ beschreibt die Bedeutung eigener Erkenntnisse und $c_2$ jene, welche durch den Kontakt zu anderen erworben wurden.
+
+  In der Analogie verkörpert $w$ das Gedächtnis des Organismus und das Verhältnis von $w$ zu $c_1$ und $c_2$ seine Bereitschaft neue Informationen bei Entscheidungen zu berücksichtigen. Die Reputation selbstgemachter Beobachtungen repräsentiert $c_1$ und mit $c_2$ spiegelt sich der Umfang des Einwirkens der Gruppe, speziell ihrer erfolg\-reicheren Mitglieder, auf das Individuum wider.
+
+  Die geeignete Einstellung dieser Parameter ist dabei von besonderer Wichtigkeit, da sich dadurch das Verhältnis im Verhalten des Schwarms zwischen der Erforschung des Suchraumes und der Konvergenz zur Lösung bestimmt. In \cite{Eberhart2001} wird gezeigt, dass die Partikel bei sehr kleinen Werten um das Optimum schwingen, ohne zu konvergieren. Bei sehr großen Werten steht hingegen die Erforschung des Suchraumes im Vordergrund und eine Konvergierung erfolgt ebenfalls nicht. Werte für ein gutes Konvergenzverhalten geben \cite{Omran2005d} und \cite{Ning2004} mit $w\approx 0,72$, $c_1\approx 1,49$ und $c_2\approx 1,49$ an. In \cite{Huang2005} erfolgt die kontinuierliche Reduzierung des Wertes\linebreak von $w$ von $0,9$ auf $0,4$ proportional zu den Iterationen.
+
+  Eine Untersuchung der Größe der Werte in Abhängigkeit von der Größe des Suchraumes wurde in \cite{Engel2005} durchgeführt. Dabei zeigte sich, dass mit dem Anwachsen des Raumes ein gleichgroßer oder größerer Wert für $c_1$ im Verhältnis zu $c_2$ leicht zum Verbleib des Partikels an einem lokalen Minimum und somit zu einem relativ schlechten Ergebnis führte. Bei einem größeren $c_2$, im Vergleich zu $c_1$, ist hingegen der Einfluss des Schwarms stärker und ein Verlassen des lokalen Minimums möglich, was in besseren Ergebnissen resultiert. Außerdem wurde dargestellt, dass ein Konvergieren der Partikel des Schwarms hin zur Lösung nur dann erfolgt, wenn $c_1+c_2 \leq 4$ gilt bzw. noch deutlich stärker bei:
+  \begin{equation}
+    w > \frac{(c_1+c_2)}{2}-1
+  \end{equation}\\
+
+  \noindent Die abschließende Berechnung der $j$-ten Komponente der neuen Position $\vec{x}_s(t_P+1)$ zum Zeitpunkt $t_P+1$ erfolgt mittels:
+  \begin{equation}\label{DefPositionsupdate}
+    x_{sj}(t_P+1) = x_{sj}(t_P) + v_{sj}(t_P+1)
+  \end{equation}\\
+
+  \noindent Sind die Suchraumkoordinaten eine Menge binärer Werte ($\lbrace 0, 1\rbrace$), dann wird $v_{sj}(t_P)$ als Wahrscheinlichkeit betrachtet und die $j$-te Komponente des\linebreak Positionsvektors $\vec{x}_s(t_P+1)$ auf $0$ gesetzt oder auf $1$, falls das Resultat der Sigmoidfunktion von $v_{sj}(t_P+1)$ größer als der Betrag einer gleichverteilten\linebreak Zufallszahl $r_j(t_P), r_j(t_P)\sim U(0,1)$, ist. Die Formel \ref{DefPositionsupdate} substituiert somit zu \cite{Kennedy1997}:\linebreak
+  \begin{equation}\label{DefPositionsupdateBinary}
+    x_{sj}(t_P+1) = \begin{cases}
+    		     0 & : r_j(t_P) \geq sig(v_{sj}(t_P+1))\\
+		     1 & : r_j(t_P) < sig(v_{sj}(t_P+1))\\
+		   \end{cases}
+  \end{equation}\\
+
+  \noindent Damit endet ein Schritt und der nächste beginnt. Falls das STOP-Kriterium\linebreak erfüllt ist, wird eine beste Position $\tilde{\vec{y}}(t_P)$ im Schwarm ausgewählt und als Lösung der\linebreak Optimierung betrachtet:
+  \begin{equation}\label{DefGlobalBest}
+    \tilde{\vec{y}}(t_P) = \vec{y}_n(t_P),\textrm{\space mit \space} Q(\vec{y}_n(t_P)) = \min_{m\in\mathbb{S}}(Q(\vec{y}_m(t_P))),\textrm{\space} n\in\mathbb{S}
+  \end{equation}
+\pagebreak
+\subsubsection{Mögliche Verbesserungen}
+  Zusätzlich zum einfachsten Modell der Iterationsschrittdurchführung existieren\linebreak verschiedene Erweiterungen, um die Leistungsfähigkeit weiter zu verbessern.
+  
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=9.5cm]{Bilder/v_max}
+    \caption{Größtmögliche Wertänderungen von $\vec{v}_s(t_P)$ proportional zur Iteration (durchgezogene Linie), oder in einer Serie von Stufen (gestrichelte Linie).}
+    \label{Iter_v_max}
+  \end{figure}  
+  Die Reduzierung des Umfanges der Wertänderungen von $v_{sj}(t_P+1)$ simultan zur Anzahl der Schritte ist als Prozess des simulierten Ausglühens bekannt (Abb. \ref{Iter_v_max}). Auf diese Weise können während der ersten Schritte große Entfernungen im Suchraum überbrückt und qualitativ ungünstige Areale schnell verlassen werden. Während der letzten Iterationen aber würde ein derartiges Verhalten eventuell zum Überspringen\linebreak oder Verlassen des Gebietes führen, in welchem sich das Optimum befindet.\linebreak Kleinere Schritte sind hier vorteilhafter und werden durch die Verringerung\linebreak erzwungen. \cite{Eberhart2001}
+
+  Ein weiteres Modell sieht vor, dass jedes Partikel die Anzahl der Iterationen seit der letzten größeren Verbesserung von $\vec{y}_s(t_P)$ zählt. Überschreitet diese ein festgelegtes Maß, ist wahrscheinlich ein Minimum, eventuell aber nur ein lokales, gefunden worden. Je nach Zielfunktion, der Größe von $v_{\textrm{max}}$ und der Nachbarschaftstopologie verbleibt dieses Partikel eine lange Zeit in der Nähe dieser Position ohne nennenswerte Verbesserungen zu erfahren und wichtiger: ohne weitere Teile des Suchraumes zu prüfen (Abb. \ref{Suchraum}). Deshalb werden einzelne Komponenten von $\vec{x}_s(t_P)$ und $\vec{v}_s(t_P)$ zufällig verändert und somit ein Sprung im Suchraum durchgeführt. Als Folge dessen ist ein Verlassen des Bereiches und die Fortsetzung der Suche nach dem globalen Minimum möglich. \cite{Ning2004}
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=8cm]{Bilder/Suchraum}
+    \caption{Suchraum mit mehreren lokalen und einem globalen Minimum. Ein in der linken Senke gefangenes Partikel kann nur mit ausreichend großen Schritten oder einem zufälligen Sprung z.B. in die Mitte des Raumes entkommen.}
+    \label{Suchraum}
+  \end{figure}
+
+\subsubsection{STOP-Kriterium}\label{PSO_IterStop}
+  Die Bedingung zum Beenden der Iterationen ist ebenfalls in unterschiedlichen Ausprägungen gegeben. Häufig muss eine festgelegte Anzahl an Schritten abgearbeitet werden und das beste zu diesem Zeitpunkt bekannte $\tilde{\vec{y}}(t_P)$ stellt dann die Lösung dar. Der Vorteil hiervon liegt darin, dass das Ergebnis nach einer festen Zeitspanne vorliegt. Der Nachteil dem gegenüber ist, dass möglicherweise von den Startpositionen aus nicht das beste Ergebnis erreicht wurde, da die Anzahl der Schritte zu gering war.
+
+  Andererseits kann die Iteration auch solange fortgesetzt werden, bis die Qualitäts\-verbesserung jedes Partikels unter einen festgelegten Grenzwert gefallen ist, die\linebreak Bewegungen des Schwarms also zum Stillstand gekommen sind. Der Vorteil liegt darin, dass von den Startpositionen ausgehend das beste Ergebnis auch gefunden wurde, gleichgültig wie viele Schritte das erforderte. Als Nachteil stellt sich somit der nicht vorhersagbare Zeitaufwand dar.
+
+  Eine Kombination dieser beiden, also die Vorgabe einer maximalen\linebreak Iterationsschrittanzahl und eines Grenzwertes, welcher bei Unterschreitung den Stillstand des Partikels festlegt, resultiert darin, dass die Iteration spätestens mit der Maximalanzahl und frühestens mit dem Stillstand aller Partikel endet.
+
+% --- KMeans -------------------------------------------------------------------
+\section{Clustering}
+  \glqq Beim Clustering wird eine Menge von Daten in Teilmengen ähnlicher Daten\linebreak unterteilt. Es wird angenommen, dass die Daten durch Datensätze gleicher Struktur beschrieben sind. Dann sind sich Daten ähnlich, wenn sie in bestimmten ausgesuchten Attributen weitgehend übereinstimmende Werte haben.\grqq\space\cite{DataMining2007}
+
+  Ziel ist es, eine möglichst eindeutige Trennung der Teilmengen zu bekommen, da erwartet wird, dass jede Teilmenge spezifische Eigenheiten im Bild repräsentiert und somit eine Segmentierung ermöglicht. \cite{Jaehne2002}
+
+\subsection{Aufbau des Raumes}
+  Die Menge von $E$ Eigenschaften bildet den Merkmalsraum $\mathbb{A}$ mit Vektoren der\linebreak Größe $E$. Für jeden Bildpunkt $p_{ij}$ erfolgt die Darstellung als \textit{Merkmals-\linebreak vektor} $\varphi(p_{ij})\in\mathbb{A}$ \cite{Jaehne2002}.\\
+
+  \noindent Alle $\varphi(p_{ij})$ bilden eine Menge $\mathbb{D}\subseteq\mathbb{A}$ der Merkmalsvektoren:
+  \begin{equation}\label{DefMerkmalsmenge}
+    \mathbb{D} = \bigcup\limits_{0\leq i < H, 0\leq j < B} \{\varphi(p_{ij})\}
+  \end{equation}
+ 
+  \noindent Die Mächtigkeit von $\mathbb{D}$ wird als $A_\mathbb{D}$ bezeichnet:
+  \begin{equation}\label{DefMerkmalsmenge}
+    A_\mathbb{D}  = \sum\limits_{\vec{d}\in\mathbb{D}} 1
+  \end{equation}
+
+  \noindent In dieser Arbeit entspricht für einen Bildpunkt (z.B. Abb. \ref{fig:KMeansBeispielbild_Bild}) dessen $f$-te\linebreak Eigenschaft der $f$-ten Komponente des Vektors $\varphi(p_{ij})= \vec{d}$.
+  Die Kanäle des\linebreak RGB-Farbraumes stellen diese Eigenschaften dar, so dass der Farbraum als Merkmalsraum (Abb. \ref{fig:KMeansBeispielbild_cSpace}) aufgefasst werden kann ($E=A_F$). Der Wert der $f$-ten Komponente von $\vec{d}$ ist also gleich dem Wert der $f$-ten Komponente eines Pixels $p_{ij}$, dessen korrespondierender Merkmalsvektor $\vec{d}=\varphi(p_{ij})$ ist.
+  \begin{equation}
+    \vec{d} = \left(\begin{array}{l} d_0\\ d_1\\ d_2\end{array}\right) = \left(\begin{array}{l} w_{0ij}\\ w_{1ij}\\ w_{2ij}\end{array}\right) = \left(\begin{array}{l} w_r\\ w_g\\ w_b\end{array}\right)
+  \end{equation}
+
+  \noindent Bei einer Bildfolge erweitert sich der Raum um eine Dimension, welche $T$ repräsentiert und somit die Zuordnung jedes Merkmalsvektors zu einem bestimmten Bild der Folge darstellt.
+  \begin{figure}[!b]
+    \centering
+    \begin{tabular}{cc}      
+      \multicolumn{2}{c}{
+      \subfloat[Auf 256 Farben reduziertes\newline Originalbild. \cite{BerkeleyDB}]{
+        \label{fig:KMeansBeispielbild_Bild}
+	\includegraphics[width=5cm]{Bilder/Blume256}
+      }} \\
+      \subfloat[Abbildung der Pixel in den\newline Merkmalsraum.]{
+        \label{fig:KMeansBeispielbild_cSpace}
+        \includegraphics[width=5cm]{Bilder/cSpace}
+      } &
+      \subfloat[Histogramm der Punkte im Merkmalsraum (die Größe der Kreise ist proportional zur Anzahl).]{
+        \label{fig:KMeansBeispielbild_Histogramm}
+	\includegraphics[width=5cm]{Bilder/Histogram}
+      } \\
+    \end{tabular}
+    \caption{Repräsentation eines Bildes im Merkmalsraum.}
+    \label{KMeansBeispielbild}
+  \end{figure}
+
+  Aufgrund der Tatsache, dass mehrere Pixel auf den selben Merkmalsvektor im Merkmalsraum abgebildet werden können, wird eine Statistik (Histogramm genannt) darüber benötigt, wie viele Bildpunkte auf ein $\vec{d}\in\mathbb{D}$ abgebildet wurden (Abb. \ref{fig:KMeansBeispielbild_Histogramm}). Die Anzahl dieser Pixel stellt $h_{\vec{d}},h_{\vec{d}}\in\mathbb{N}$, dar. Folglich ist die Anzahl aller Pixel $A_P$ gleich der Summe der absoluten Häufigkeiten $h_{\vec{d}}$ aller Merkmalsvektoren $\vec{d}\in\mathbb{D}$:
+  \begin{equation}\label{DefDatenpunktanzahl}
+    \begin{array}{ll}
+      A_P & = \sum\limits_{\vec{d}\in\mathbb{D}} h_{\vec{d}}
+    \end{array}
+  \end{equation}
+
+\subsection{Cluster und Centroide}
+  Ein \textit{Cluster} $C$ entspricht einer Teilmenge der Menge $\mathbb{D}$, welche aus ähnlichen\linebreak Punkten $\vec{d}$ besteht und sich von anderen Teilmengen größtmöglich unterscheidet.\\
+
+  \noindent Der Cluster $C$ wird durch den Vektor $\vec{m}$ (\textit{Centroid} genannt) repräsentiert. Im Allgemeinen ist dieses der gemeinsame Mittelpunkt aller Punkte von $C$. \cite{Jaehne2002}
+  
+  Sollte kein $\vec{d}\in\mathbb{D}$ mit den Koordinaten von $\vec{m}$ übereinstimmen, an dieser Stelle also kein Punkt im Merkmalsraum existieren, so wird meist der Vektor $\vec{d}$ benutzt, welcher den geringsten euklidischen Abstand zu $\vec{m}$ aufweist. \cite{Omran2005}\\
+
+  \noindent Der Vorgang der \textit{Clusterung} bezeichnet die Zerlegung der Menge $\mathbb{D}$ in die\linebreak Cluster $C_1, C_2, ..., C_{A_C}$, wobei $A_C$ ihrer Anzahl entspricht:
+  \begin{equation}
+    A_C = \sum\limits_{C} 1
+  \end{equation}
+  
+  \noindent Der Repräsentant des $i$-ten Clusters $C_i$ ist $\vec{m}_i$.\\
+
+  \noindent Alle Cluster umfassen mindestens einen Punkt, sind paarweise disjunkt und unterteilen die Menge der Merkmalsvektoren vollständig (Formel \ref{DefClustering}). \cite{Omran2005d}
+  \begin{equation}\label{DefClustering}
+    \begin{array}{ll}
+      \forall i\in\{1, 2, ..., A_C\}: & C_i \neq\emptyset\\
+      \forall i,j\in\{1, 2, ..., A_C\},i \neq j: & C_i\cap C_j = \emptyset\\
+      \mathbb{D} = \bigcup\limits_{i=1}^{A_C} C_i 
+    \end{array}
+  \end{equation}
+
+  \noindent Der im folgenden vorgestellte Algorithmus K-Means erzeugt eine Clusterung der Menge $\mathbb{D}$. Zur Messung der Qualität der Partitionierung zum Iterations-\linebreak zeitpunkt $t_K\in I_\textrm{KMeans}$, wobei $|I_\textrm{KMeans}|$ der Gesamtanzahl an Iterationsschritten von K-Means entspricht, erfolgt im Wesentlichen die Betrachtung der Kompaktheit und Separiertheit (Abb. \ref{KS_heit}). \textit{Kompaktheit} heißt, dass die Datenpunkte innerhalb eines Clusters zueinander ähnlich sind, im Merkmalsraum also nahe beieinander liegen.
+  
+  Nach \cite{Ray1999} lässt sich die Kompaktheit aller Cluster, $intra$ genannt, als Summe von Summen der quadrierten Distanzen aller Punkte $\vec{d}$ eines jeden Clusters $C_k(t_K)$ zu dessen Centroid $\vec{m}_k(t_K)$ beschreiben, wobei die Häufigkeit $h_{\vec{d}}$ der Punkte zu\linebreak berücksichtigen bleibt.
+  \begin{figure}
+    \centering
+    \begin{tabular}{cc}      
+      \subfloat[Drei kompakte, gut separierte\newline Cluster $C_1,C_2,C_3$.]{
+        \label{fig:KS_heit_Gut}
+	\includegraphics[width=5.8cm]{Bilder/KS_heit_Gut}
+      } &
+      \subfloat[Die Cluster sind nicht sehr kompakt und gehen teilweise ineinander über. Somit ist eine eindeutige Zuordnung der Punkte erschwert.]{
+        \label{fig:KS_heit_Schlecht}
+        \includegraphics[width=5.8cm]{Bilder/KS_heit_Schlecht}
+      } \\
+    \end{tabular}
+    \caption{Beispiel für eine gute (a) und eine schlechte (b) Zerlegung.}
+    \label{KS_heit}
+  \end{figure}
+  \begin{equation}\label{DefIntra}
+    intra(t_K) = \frac{1}{A_P}\sum\limits_{k=1}^{A_C}\sum\limits_{\vec{d}\in C_k(t_K)} h_{\vec{d}}\cdot ||\vec{m}_k(t_K)-\vec{d}||^2
+  \end{equation}
+
+  \noindent Der Begriff der \textit{Separiertheit} hingegen beschreibt die Deutlichkeit der Trennung\linebreak zwischen den Clustern und kann nach \cite{Ray1999} als minimaler quadrierter Abstand, $inter$ genannt, der Centroide zueinander aufgefasst werden. \cite{Omran2006}
+  \begin{equation}\label{DefInter}
+    inter(t_K) = \min_{i,j\in\{1,2, ..., A_C\}, i\neq j}(||\vec{m}_i(t_K)-\vec{m}_j(t_K)||^2)
+  \end{equation}
+
+  \noindent Somit ist die Qualität $J(t_K)$ einer Partitionierung zum Iterationsschritt $t_K$ das\linebreak Verhältnis von Kompaktheit zu Separiertheit, wobei ein kleiner Wert eine gute, ein großer Wert hingegen eine schlechte Partitionierung repräsentiert. \cite{Ray1999}
+  \begin{equation}
+    J(t_K) = \frac{intra(t_K)}{inter(t_K)}
+  \end{equation}
+\pagebreak
+\subsection{K-Means}
+  \textit{K-Means} ist ein häufig eingesetzter, iterativer Cluster-Algorithmus, der große Datenmengen und mehrere Dimensionen mit akzeptablem Rechenaufwand verarbeiten kann und nur über zwei Informationen im Voraus verfügen muss, zum einen die Menge der Startpositionen im Merkmalsraum, zum anderen die Anzahl $A_C$ der Cluster. Diese Angaben beruhen aber oft auf Kenntnissen über die Eigenschaften des Merkmalsraumes, welche eventuell erst nach der korrekten Clusterung verfügbar sind. Erschwerend kommt hinzu, dass diese einen beträchtlichen Einfluss auf den Verlauf der Clusterung haben und so direkt die Lösung beeinflussen. \cite{Yosung2005}
+
+  Als Ergebnis des Algorithmus ist jeder Merkmalsvektor $\vec{d}_i\in\mathbb{D}$ zum\linebreak Zeitpunkt $t_K\in I_\textrm{KMeans}$ genau einem Cluster dadurch zugeordnet, so dass der Abstand von $\vec{d}_i$ zum Centroiden $\vec{m}_k(t_K)$ des Clusters $C_k(t_K)$ geringer ist, als zu jedem anderen Centroiden $\vec{m}_l(t_K)$. Bei Uneindeutigkeit von $C_k(t_K)$, wird der Cluster mit dem kleineren Index gewählt. Dabei bezeichnet 
+  \begingroup
+  \everymath{\scriptstyle}
+  \small
+  \begin{equation}\label{DefCluster}
+    C_k(t_K) = \{\vec{d}_i \textrm{\space}\vert\textrm{\space} \vec{d}_i\in\mathbb{D}; ||\vec{m}_k(t_K) - \vec{d}_i(t_K)|| = \min\limits_{l\in \{1, 2, ... A_C\}}(||\vec{m}_l(t_K) - \vec{d}_i(t_K)||)\} 
+  \end{equation}
+  \endgroup
+
+  \noindent Einige Verfahrensvarianten gehen a priori von einer Maximalanzahl $A_{C_\textrm{max}}\in\mathbb{N^+}$ an Clustern aus, führen den Algorithmus für alle $A_C\in\{2,3, ..., A_{C_\textrm{max}}\}$ aus und bestimmen anhand der Qualitätsfunktion $J(t_K)$ den korrekten Wert für $A_C$. \cite{Ray1999}
+  
+  Andere, auch das in dieser Arbeit verwendete Verfahren, wählen eine\linebreak Menge möglicher Startpunkte aus, deren Anzahl ebenfalls $A_{C_\textrm{max}}$ beträgt, und nutzen die Qualitätsfunktion $J(t_K)$ zur Bestimmung der geeignetsten Startpunkte und damit der korrekten Anzahl $A_C$ vor Ausführung des Algorithmus. \cite{Omran2005}
+
+  Die Bestimmung der Startpositionen erfolgt meist gleichverteilt zufällig, um zu vermeiden, dass die Wahl der Positionen einen negativen Einfluss auf das Resultat ausübt. \cite{Omran2005}
+  
+  In \cite{Arthur2007} wird die Bestimmung zusätzlich mit Hilfe einer Abstandsfunktion dahingehend erweitert, dass zusätzlich zur weiterhin zufällig durchgeführten Auswahl eine möglichst großräumige Verteilung im Merkmalsraum stattfindet.
+  Die Wahrscheinlichkeit eine Startposition in unmittelbarer Nähe zu einer anderen Startposition zu wählen ist geringer als in einiger Entfernung.
+  Damit soll erreicht werden, dass sich die Startpunkte in weitgehend gleichmäßigen Abständen großflächig über die Menge der Merkmalsvektoren im Merkmalsraum verteilen (Abb. \ref{AbstandsStartpos} und \ref{AbstandsStartpos_Folgen}), woraus sich eine höhere Qualität der Lösung ableiten lässt.
+
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=5cm]{Bilder/AbstandsStartpos}
+    \caption{Die Wahrscheinlichkeit einen Merkmalsvektor (Kreuze) als weiteren Startpunkt zu wählen, hängt von dessen Abstand zu einem bereits gewählten Startpunkt ($d_1, ..., d_5$) ab. Sie ist in deren Nähe (helle Bereiche) geringer als in einiger Entfernung (dunkle Bereiche).}
+    \label{AbstandsStartpos}
+  \end{figure}
+  \begin{figure}[!b]
+    \centering
+    \begin{tabular}{ccc}
+      \subfloat[Sind die Centroide (roter und grüner Punkt) gut über die Menge der Merkmalsvektoren (ovale Bereiche) verteilt, so ist dies ihre Partitionierung im ersten Iterationsschritt. Weitere führen zu (b).]{
+        \label{fig:AbstandsStartpos_Folgen_Auswahl_Gut}
+	\includegraphics[width=4cm]{Bilder/Centroidverteilung_Gut}
+      } &
+      \subfloat[Beide Centroide befinden sich bei Iterationsende im Mittelpunkt einer der beiden Teilmengen der Merkmalsvektoren, wodurch eine gut Zerlegung erzielt wird.]{
+        \label{fig:AbstandsStartpos_Folgen_Auswahl_Gut_Ergebnis}
+	\includegraphics[width=4cm]{Bilder/Centroidverteilung_Gut_Ergebnis}
+      } &
+      \subfloat[Sind die Centroide (roter und grüner Punkt) zu nahe beieinander gewählt, so wechselt eventuell keiner der beiden Centroide in die oberen Teilmenge. Die so entstehende Zerlegung ist schlecht, da beide Cluster an beiden Teilmengen beteiligt sind.]{
+        \label{fig:AbstandsStartpos_Folgen_Auswahl_Schlecht_Ergebnis}
+        \includegraphics[width=4cm]{Bilder/Centroidverteilung_Schlecht}
+      } \\
+    \end{tabular}
+    \caption{Beispiel für die Abhängigkeit des Ergebnisses von der Wahl der Startpositionen.}
+    \label{AbstandsStartpos_Folgen}
+  \end{figure}
+
+  Zur Beschleunigung des Algorithmus ist aus den Ebenen einer Pyramide eines Bildes eine Menge von Merkmalsräumen erzeugbar. Dabei wird angenommen, dass
+  \begin{enumerate}
+    \item die Anzahl an Merkmalsvektoren in den aus den oberen Ebenen gebildeten Merkmalsräumen geringer ist als in den unteren,
+    \item die zu teilenden Mengen zwar weniger Merkmalsvektoren umfassen, aber ihre Lage im Merkmalsraum nicht wesentlich ändern (Abb. \ref{Merkmalsvektorreduzierung}) und
+    \item die Clusterung von wenigen Merkmalsvektoren auch weniger Iterationen benötigt, um eine vergleichbar gute Lösung zu erzielen. 
+  \end{enumerate} 
+  
+  \begin{figure}[!t]
+    \centering
+    \begin{tabular}{cc}      
+      \subfloat[Alle Merkmalsvektoren sind enthalten und der Centroid (roter Punkt) liegt in ihren Mitte.]{
+        \label{fig:Merkmalsvektorreduzierung_Alle}
+	\includegraphics[width=5.2cm]{Bilder/Merkmalsvektorreduzierung_Alle}
+      } &
+      \subfloat[Aus den Bildpunkten einer höheren Ebene der Pyramide eines Bildes wurden weniger Merkmalsvektoren abgebildet, aber ihr Mittelpunkt ist nahezu unverändert.]{
+        \label{fig:Merkmalsvektorreduzierung_Wenige}
+        \includegraphics[width=5.2cm]{Bilder/Merkmalsvektorreduzierung_Wenige}
+      } \\
+    \end{tabular}
+    \caption{Beispiel für die Reduzierung der Merkmalsvektoren.}
+    \label{Merkmalsvektorreduzierung}
+  \end{figure}
+
+  \noindent Es folgt die Anwendung von K-Means auf jeder Ebene, beginnend mit der obersten\linebreak und mit reduzierter Iterationsschrittanzahl, wobei die gewonnenen Centroid\-positionen der höheren als Startpositionen auf die nächstniedere Stufe übertragen werden, da in der oberen eine schnelle Bestimmung der Centroidpositionen in der Nähe ihrer Endposition stattfand und diese in der darunter liegenden Ebene präzisiert wird. \cite{Liju2006}
+
+  \noindent Bedingt durch diese höhere Geschwindigkeit sind weniger Iterationen je Ebene und auch weniger Iterationen insgesamt nötig, als im Vergleich zur Anwendung ohne Pyramide. \cite{Liju2006}
+
+\subsubsection{Vorbearbeitung}
+  Als Vorbereitung zur Anwendung von K-Means werden die Merkmalsräume erstellt und die Kandidatenmenge der Centroidenstartpositionen bestimmt. Die Auswahl der im Verfahren verwendeten Centroide, und somit indirekt auch deren Anzahl, geschieht aus der Kandidatenmenge und ist Aufgabe der Partikel Schwarm Optimierung.
+
+\subsubsection{Ablauf}
+  Der Algorithmus startet mit einem vorgegebenen Merkmalsraum, der gegebenen Menge darin enthaltener Centroide und dem STOP-Kriterium. In jedem Schritt erfolgt die Berechnung aller Abstände zwischen Centroiden und Merkmalsvektoren, die Partitionierung des Merkmalsraumes durch Zuordnung jedes Vektors zum nächstgelegenen Centroiden und die Bestimmung eines neuen Centroiden im Mittelpunkt jedes Clusters.
+
+\subsubsection{Iteration}
+  Zu Beginn jedes Iterationsschrittes $t_K\in I_\textrm{KMeans}$ erfolgt für alle $i$ und $j$ die Bestimmung des \textit{Abstandes} $z_{ij}(t_K),z_{ij}(t_K)\in\mathbb{R}$, zwischen dem Centroiden $\vec{m}_j(t_K)$ und dem Merkmalsvektor $\vec{d}_i$ mittels der Formel \ref{DefKMeans_Abstand}. Die Ergebnisse werden in die Matrix $V_{C\mathbb{D}}(t_K) = (z_{ij}(t_K))$, mit $A_C$ Spalten und $A_{\mathbb{D}}$ Zeilen, eingetragen.
+  \cite{Liju2006}
+  \begin{equation}\label{DefKMeans_Abstand}
+    z_{ij}(t_K) = || \vec{m}_j(t_K) - \vec{d}_i || \qquad\qquad 0\leq j < A_C, 0\leq i < A_{\mathbb{D}}
+  \end{equation}
+  
+  \noindent Daraufhin folgt die Zuordnung jedes $\vec{d}_i$ zu einem $C_j(t_K)$, dessen Centroid $\vec{m}_j(t_K)$ den geringsten Abstand gemäß $V_{C\mathbb{D}}(t_K)$ aufweist. Als Resultat liegt eine Zerlegung des Merkmalsraumes vor.\\
+
+  \noindent Anschließend wird für jeden Cluster $C_j(t_K)$ die Position des Mittelpunktes $\vec{m}'_j(t_K+1)$ errechnet:
+  \begin{equation}
+    \vec{m}'_j(t_K+1) = \frac{\sum\limits_{\vec{d}\in C_j(t_K)} \vec{d}}{\sum\limits_{\vec{d}\in C_j(t_K)}1} \quad, \qquad\qquad j\in\{1, ..., A_C\}
+  \end{equation}
+  und ein Punkt $\vec{d}_i\in\mathbb{D}$ mit minimalem Abstand zu $\vec{m}'_j(t_K+1)$ als neuer Centroid $\vec{m}_j(t_K+1)$ ausgewählt.
+  \begin{equation}\label{DefKMeans_NeuerCentroid}
+    \vec{m}_j(t_K+1) = \vec{d}_i \textrm{\space mit \space}  ||\vec{m}'_j(t_K+1) - \vec{d}_i|| = \min_{\vec{d}_k\in\mathbb{D}}(||\vec{m}'_j(t_K+1)-\vec{d}_k||), \vec{d}_i\in\mathbb{D}
+  \end{equation}
+  Damit endet der Iterationsschritt und der nächste beginnt. Falls das STOP-Kriterium erfüllt ist, wird die vorhandene Partition als Lösung betrachtet.
+   
+  
+\subsubsection{STOP-Kriterium}
+  Die STOP-Kriterien sind analog zu denen der Partikel Schwarm Optimierung (Seite \pageref{PSO_IterStop}), also die Vorgabe einer festen Iterationsschrittanzahl, eines zu unterschreitenden Grenzwertes, der den Stillstand festlegt und die Kombination dazu, bei welcher die Iteration entweder nach Erreichen der Maximalschrittanzahl oder bei Stillstand endet.
+
+% --- Video -------------------------------------------------------------------
+\section{Anpassung des Verfahrens an Videosequenzen}
+  Die Anpassung an Videosequenzen führt zu einer Erweiterung des Merkmalsraumes um eine Dimension zur Repräsentation von $T$.  
+  Die Bildreihenfolge wird bei der Transformation der Bildpunkte in Form unterschiedlicher Werte für $t$ mit in den Merkmalsraum übernommen, so dass die Abbildung zweier farblich identischer Punkte in zwei Merkmalsvektoren resultiert, deren Abstand gleich der Differenz ihrer $t$ ist. 
+  \begin{equation}
+    \vec{d}=\left(\begin{array}{l} w_r\\ w_g\\ w_b\\ t \end{array}\right)
+  \end{equation}
+  Das Ergebnis des Clusterings beruht demzufolge auch auf vorangegangen Daten, obwohl nur Pixel, welche im aktuellen Bild vorhanden sind, bei der Segmentierung Beachtung finden.
+

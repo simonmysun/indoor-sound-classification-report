@@ -1,0 +1,428 @@
+\chapter{Introduction}
+Ziel des Forschungsprojekts „sachsMedia“ an der Professur für Medieninformatik der Technischen Universität Chemnitz ist unter anderem das von Fernsehsendern\linebreak benutzte Videomaterial zu verarbeiten.
+Dieses soll automatisch von Computern eingelesen, sein Inhalt weitestgehend erfasst und darauf aufbauend einheitlich indexiert werden, um letztlich Recherchen leichter durchführen zu können. \cite{Pressemitteilung}
+
+Die Vielzahl der verwendeten Plattformen bei den Sendern bedingt zudem eine davon unabhängige Implementation in Java, so dass zur Einzelbildverarbeitung die Software ImageJ \cite{ImageJ} und JMU (Java Media Utility) \cite{JMU} für Bildfolgen\linebreak benutzt werden.
+Beispieldaten stammen von \glqq The Berkeley Segmentation Dataset and Benchmark\grqq\space\cite{BerkeleyDB}, vom Forschungsprojekt oder von TV-Mitschnitten.
+
+Dem Vorgang der Zerlegung von Bildern, auch \textit{Segmentierung} genannt, fällt hierbei eine besondere Bedeutung zu, da dessen Qualität beträchtlich die nachfolgender Verfahren bestimmen kann.\\ \\
+
+\noindent Im Vordergrund der Diplomarbeit steht die Entwicklung eines Verfahrens, welches automatisch und ohne Vorwissen eine Segmentierung des übergebenen Bild- bzw. Videomaterials durchführt.
+
+Dem Einblick in das Thema und dabei auftretende Randbedingungen folgt eine Beschreibung der eingesetzten Software. Eine Übersicht auf nachfolgende Kapitel schließt die Einleitung ab.
+\pagebreak
+
+\section{Allgemeine Vorbetrachtungen}
+\begin{figure}[!t]
+\subfloat[Dieses Bild \cite{BerkeleyDB} zeigt, für Menschen gut erkennbar, drei Zebras links und eins rechts.]{
+\label{fig:Label_Zebra_Anordnung}
+\includegraphics[width=6.3cm]{Bilder/Zebra}
+}
+\subfloat[Die Streifen im Bild sind meist gut unterscheidbare Bereiche hellen und dunklen Fells. Aber sowohl deren korrekte Abgrenzung zum Hintergrund als auch die Zusammensetzung um eines der Zebras zu formen weisen für Bildanalyseverfahren bereits Probleme auf. Zur Bestimmung der richtigen Anzahl und Gruppierung sind diese Informationen aber nötig. \cite{BerkeleyDB}]{
+\label{fig:Label_Zebra_Zusammen}
+\includegraphics[width=6.3cm]{Bilder/Zebra}
+}
+\label{VisuelleBeobachtung}
+\caption{Visuelle Beobachtungen}
+\end{figure}
+In vielen Bereichen spielen visuelle Beobachtungen (Abb. \ref{VisuelleBeobachtung} und Abb. \ref{Zahnrad}) eine wichtige Rolle. Durch sie können Informationen, z.B. über Form, Größe, Anzahl, Farbe, Musterung, Bewegungsrichtung und -art, oder auch über die Zusammensetzung von Objekten gesammelt werden, ohne einen direkten Kontakt jedweder Art dazu herstellen zu müssen. Zusätzlich ist eine Erfassung der relativen Anordnung (Abb. \ref{fig:Label_Zebra_Anordnung}), deren Zusammengehörigkeit (Abb. \ref{fig:Label_Zebra_Zusammen}) und darauf aufbauend auch deren Funktions- bzw. Interaktionsweise (Abb. \ref{Zahnrad}) möglich.
+\begin{figure}[!b]
+\begin{center}
+\includegraphics[width=4.3cm]{Bilder/Kegelrad}
+\caption{Dass die Bewegung eines Zahnrades in der des anderen resultiert, kann leicht erkannt werden. Um auf die Interaktionsweise zu schlussfolgern, ist die Form der Zahnräder zu erkennen, indem einzelne Flächen\newline korrekt zusammengesetzt werden. \cite{Kegelrad}}
+\label{Zahnrad}
+\end{center}
+\end{figure}
+
+Viele dieser Informationen werden von Menschen bzw. Lebewesen mit visuellen Wahrnehmungsorganen umgehend ausgewertet und führen zu entsprechenden Reaktionen (z.B. Interesse, Flucht, Hunger, aber auch der Entscheidung einen anderen Weg zu nehmen, da der betrachtete zu weit erscheint). Andere bedürfen einer genaueren,\linebreak zeit- und ressourcenintensiveren Verarbeitung und Analyse, um zu einem geeigneten Ergebnis (Abb. \ref{Zielfoto}) zu gelangen. Dies erfordert oftmals eine Speicherung in einer\linebreak geeigneten, langlebigeren Repräsentation und eine spätere Auswertung. Dies kann unter anderem in Form von textuellen Beschreibungen, manuell angefertigten Zeichnungen, Fotografien oder Filmen erfolgen. \cite{Jaehne2002}
+
+Einige Anwendungen nutzen wiederum gezielt die Möglichkeiten jener Medien wie z.B. die, viele Bilder in kurzer Zeit anfertigen zu können, um Elementarteilchen in Wasserstoffblasenkammern oder Fehler bei der Fertigung von Teilen entdecken zu können. \cite{Jaehne2002}
+\begin{figure}[!b]
+\centering
+\includegraphics[width=4cm]{Bilder/Fotofinish}
+\caption{Der Sieger ist nur durch eingehende Analyse des Zielfotos zu ermitteln, da sich beide zu schnell bewegen um es durch Schiedsrichter sofort entscheiden zu lassen. \cite{Cyclingnews}}
+\label{Zielfoto}
+\end{figure}
+
+Diese Aufgaben sind zwar grundsätzlich auch von Menschen, unter Umständen mit Hilfsmitteln, untersuch- und analysierbar, wobei der dafür notwendige Ressourcen-,\linebreak Zeit- und Personalbedarf durchaus sehr hoch sein kann, insbesondere wenn sehr viele Fotos oder sehr lange Filme anfallen. Die Analyse eingehender Kontexte kann zum einen den Einsatz und die Untersuchung durch teures Fachpersonal erfordern, zum anderen aber auch ein schnelles Nachlassen der Konzentration der Menschen nach sich ziehen, was höhere Fehlerraten eruiert, somit wiederum einen insgesamt größeren Personalbedarf erfordert.
+Schlimmstenfalls erreicht die Gesamtmenge der Daten einen nicht mehr handhabbaren Umfang.\pagebreak
+
+\noindent Bedingt durch die Fortschritte und die damit einhergehende Leistungssteigerung sind Computer in zunehmendem Maße in der Lage große Teile dieser Aufgaben zu übernehmen. Zum Teil reichen die Kapazitäten aus, um bestimmte, einfachere Problemstellungen, wie die visuelle Inspektion von Bauteilen (Abb. \ref{Bauteilinspektion}) vollständig zu behandeln. \cite{Jaehne2002}
+\begin{figure}[!t]
+\centering
+\includegraphics[width=4cm]{Bilder/Inspektion}
+\caption{Bei der Qualitätskontrolle dieser Lötkontakte (linker ist fehlerhaft) sind die Umgebungseigenschaften bekannt, was die Analyse vereinfacht und somit eine komplette Automatisierung ermöglicht. \cite{Jaehne2002}}
+\label{Bauteilinspektion}
+\end{figure}
+
+Derartige Anwendungen benötigen allerdings oft bekannte oder feste Umgebungseigenschaften wie z.B. gute Sichtverhältnisse, ausreichend Kontrast zum Hintergrund oder die Form des zu erkennenden Objektes (Abb. \ref{Licht}).
+
+Bei nichtoptimalen Randbedingungen werden, insbesondere im Bereich der Objekt\-erkennung, die derzeit technischen Möglichkeiten aber schnell erreicht, wobei sich der große Unterschied zur bemerkenswerten Leistungsfähigkeit des menschlichen visuellen Systems offenbart, wie Abb. \ref{Anwendungseinschraenkung} exemplarisch zeigt \cite{Wilhelm2005}.
+\begin{figure}[!b]
+\centering
+\subfloat[Bei einwandfreier Beleuchtung und gutem Kontrast ist das Objekt gut erkennbar.]{
+\includegraphics[width=4.3cm]{Bilder/Licht_richtig}
+\label{fig:LichtGut}
+}
+\subfloat[Große Teile des Objektes sind unzureichend beleuchtet und der Kontrast zum Hintergrund ist teilweise nicht vorhanden, so dass eine Erkennung stark erschwert wird.]{
+\label{fig:LichtSchlecht}
+\includegraphics[width=4.3cm]{Bilder/Licht_falsch1}
+}
+\caption{Einfluss der Beleuchtung auf die Erkennbarkeit von Objekten. \cite{Jaehne2002}}
+\label{Licht}
+\end{figure}
+
+Diese Unzulänglichkeiten entstehen dadurch, dass trotz langjähriger Entwicklungen viele der scheinbar einfachen Aufgaben, wie begrenzende Kanten eines Objektes zu finden (Abb. \ref{fig:SchlechterKontrastTigerBoundary}), nicht oder nur unzureichend gelöst sind \cite{Wilhelm2005}. Verfahren zur Objekterkennung, bauen aber auf diese Vorverarbeitungsschritte auf. Fehlerhafte oder fehlende Informationen (Abb. \ref{fig:LichtSchlecht}) können sie ihrerseits kaum oder gar nicht ausgleichen, was maßgeblich ihre Fähigkeiten einschränkt wiederum zu einem brauchbaren Ergebnis zu gelangen.\pagebreak
+\begin{figure}[!b]
+\centering
+\begin{tabular}{cc}
+\subfloat[Ein Vogel auf einem Ast, mit gutem Kontrast zwischen Vorder- und Hintergrund. \cite{BerkeleyDB}]{
+\label{fig:GuterKontrastVogelOriginal}
+\includegraphics[width=5.5cm]{Bilder/GuterKontrastVogelOriginal}
+} &
+\subfloat[Der laut \cite{BerkeleyDB} beste vom Computer berechnete Umriss der im Bild enthaltenen Objekte. \cite{BerkeleyDB}]{
+\label{fig:GuterKontrastVogelBoundary}
+\includegraphics[width=5.5cm]{Bilder/GuterKontrastVogelBoundary}
+} \\
+\subfloat[Der auf dem Waldboden liegende Tiger und seine Umrisse sind trotz der unterschiedlichen Lichtverteilung und dem gestreiften Fell für Menschen leicht zu erkennen. \cite{BerkeleyDB}]{
+\label{fig:SchlechterKontrastTigerOriginal}
+\includegraphics[width=5.5cm]{Bilder/SchlechterKontrastTigerOriginal}
+} &
+\subfloat[Die \glqq besten\grqq\space vom Computer gefundenen Umrisse stellen nur einen kleinen Teil der tatsächlichen dar und zeigen deutlich den großen Leistungsunterschied. \cite{BerkeleyDB}]{
+\label{fig:SchlechterKontrastTigerBoundary}
+\includegraphics[width=5.5cm]{Bilder/SchlechterKontrastTigerBoundary}
+} \\
+\end{tabular}
+\caption{Beschränkungen der technischen Systeme.}
+\label{Anwendungseinschraenkung}
+\end{figure}
+
+\noindent Generell können sowohl die Vorverarbeitung als auch die Objekterkennung, durch zusätzliche Kenntnisse über die Form und Lage von Kanten bzw. Objekten mittels Modellbildung verbessert werden. Das dafür notwendige Wissen seinerseits ist aber nur in speziellen Fällen im Vorfeld vorhanden, wie z.B. die Form der Kaffeemaschine in Abb. \ref{fig:LichtGut}. Andererseits sind manche Objekte so variabel, dass eine zu allgemeine Beschreibung in zu vielen und eine zu genaue in zu wenigen Ergebnissen resultiert. Außerdem muss diese häufig von Menschen aufbereitet und dem Computer zugänglich gemacht werden, was abermals einer automatischen Abarbeitung allgemeiner Auf\-gaben entgegensteht.
+In diesem Falle sollten Verfahren zum Einsatz kommen, welche ohne Kenntnisse über den Inhalt der zu verarbeitenden Daten gute Ergebnisse liefern.
+Soll, wie im Rahmen des Forschungsprojektes, die Verarbeitung großer Datenmengen erfolgen, so müssen diese Resultate in angemessener Zeit verfügbar sein.\pagebreak
+
+\noindent Die Anzahl möglicher Plattformen für die Bildverarbeitung ist groß und nahezu jede weist charakteristische Eigenheiten auf, die bei der Programmierung beachtet werden müssen. Als Folge dessen kann der Einsatz einer Software auch den Einsatz der dazu passenden Plattform erfordern, was die Kosten entweder durch deren Beschaffung oder durch die Anpassung der Software an einen vorhandene Plattform erhöht. Unter Umständen ist diese Anpassung aber nicht möglich und die Nutzung der anzuschaffenden Plattform ausschließlich auf diese Software beschränkt und nur von geringem Umfang, womit sich ein schlechtes Verhältnis zwischen Kosten und Nutzen ergibt. Um diese Abhängigkeit von Software und Plattform weitgehend aufzulösen wurde u.a. die Programmiersprache Java entwickelt. \cite{Wilhelm2005}
+
+Beispiele für plattformunabhängige Software sind ImageJ und JMU, die es\linebreak ermöglichen Bilder bzw. Videos zu laden, zu bearbeiten und zu speichern.
+Durch die Verfügbarkeit ihres Programmcodes können außerdem Änderungen an der Software durchgeführt werden.\\
+
+\noindent Um Aussagen über den in einem Bild dargestellten Inhalt treffen zu können ist  eine qualifizierte Trennung in jeweils zusammengehörige Bereiche notwendig, was als Segmentierung bezeichnet wird.
+Ein, in Java entwickeltes, automatisches Verfahren zur Segmentierung von Bild- und Videodaten steht im Mittelpunkt dieser Arbeit.
+
+% --- Segmentierung ------------------------------------------------------------
+\section{Segmentierungsverfahren}
+Durch die Segmentierung erfolgt die Festlegung, welche Bereiche eines Bildes getrennt sind und welche zusammengehören, also beispielsweise einen Teil einer Fläche, eines Gegenstandes oder einer Person darstellen. Hierzu wird die Homogenität der Bereiche in Bezug zu ihren Eigenschaften als Unterscheidungsmerkmal betrachtet, wobei dies ein gleicher Farbton, eine einheitliche Textur, eine ähnliche Krümmung etc. sein können. \cite{Ste02, Jaehne2002}
+
+Aufbauend auf diesen Informationen können Analyseverfahren Objekte und \linebreak Personen im Bild identifizieren und resultierend daraus Aussagen über den dargestellten Inhalt treffen.
+
+\noindent Als Segmentierung wird dabei die vollständige und disjunkte Zerlegung des Bildes in mehrere Teile, Segmente genannt, bezeichnet.
+Im Folgenden werden verschiedene Konzepte vorgestellt um eine derartige Zerlegung zu erreichen.
+
+\subsection{Pixelbasierte Methoden}
+Diese Verfahren stellen vom Ansatz her die einfachsten Methoden dar ein Bild\linebreak (Abb. \ref{fig:Pixelbased_Original}) zu zerlegen. Hierbei werden ein oder mehrere Schwellwerte vorgegeben, welche die Farben in mehrere Gruppen unterteilen und somit die Segmentierung (Abb. \ref{fig:Pixelbased_Seg}) bestimmen. \cite{Jaehne2002}
+\begin{figure}[!b]
+\centering
+\begin{tabular}{cc}
+\subfloat[Originalbild, dessen Farbwerte von 0 (linkes Ende) bis 255 (rechtes Ende) kontinuierlich ansteigen.]{
+\label{fig:Pixelbased_Original}
+\includegraphics[width=6.4cm]{Bilder/Farbverlauf}
+} &
+\subfloat[Segmentierung des Bildes durch Vorgabe von zwei Schwellwerten bei 85 und 226. Die Farbwerte der Pixel im linken Bereich lagen unter der ersten Schwelle, die im mittleren Segment zwischen den Schwellen und die im rechten über beiden.]{
+\label{fig:Pixelbased_Seg}
+\includegraphics[width=6.4cm]{Bilder/Farbverlauf_Seg}
+} \\
+\end{tabular}
+\caption{Segmentierung mit Schwellwerten.}
+\label{Farbverlauf}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{cc}
+\subfloat[Originalbild mit zwei\newline Objekten im Vorder-\newline grund. \cite{Kegelrad}]{
+\label{fig:Segmentierung_VorderHintergrund_Original}
+\includegraphics[width=4cm]{Bilder/Segmentierung_VorderHintergrund_Original}
+} &
+\subfloat[Durch geeignete Schwellwerte ist der blaue Hintergrund vom Vordergrund (Zahnräder) trennbar.]{
+\label{fig:Segmentierung_VorderHintergrund}
+\includegraphics[width=4cm]{Bilder/Segmentierung_VorderHintergrund}
+} \\
+\end{tabular}
+\caption{Trennung von Vorder- und Hintergrund mittels Schwellwert.}
+\label{Segmentierung_VorderHintergrund}
+\end{figure}
+Mit Hilfe der Statistik (Histogramm) über die Häufigkeit der Bildpunkte mit gleichen Farben kann der Schwellwert für eine Trennung zwischen den Objekten im Vordergrund und dem Hintergrund ermittelt werden, falls der Unterschied zwischen den zugehörigen Werten ausreichend groß ist (Abb. \ref{Segmentierung_VorderHintergrund}).
+
+Dazu wird angenommen, dass ein Segment des Bildes aus Pixeln mit ähnlichen Farbwerten besteht und sich diese von den Werten anderer Segmente unterscheiden. Folglich findet sich im Histogramm ein korrespondierendes lokales Maximum, wie in Abb. \ref{Segmentierung_VorderHintergrund_Histogramm} zu erkennen ist. Der Hintergrund, oder ein anderes Segment, resultiert in einem eigenen Maximum. Als Schwellwert zur Zerlegung kann somit der Farbwert dienen, welcher sich an der Position des dazwischen liegenden Minimums befindet.
+
+\noindent Ist ein derartiges Minimum im Histogramm aber nicht zu erkennen (Abb. \ref{Segmentierung_Gepard}), so ist eine Zerlegung meist relativ fehlerbehaftet und führt zu entsprechend schlechten Ergebnissen.
+\begin{figure}[!bh]
+\centering
+\includegraphics[width=9.5cm]{Bilder/Segmentierung_VorderHintergrund_Histogramm}
+\caption{Histogramm des Originalbildes \ref{fig:Segmentierung_VorderHintergrund_Original} mit dem Wertebereich 0 bis 255 und der maximalen Häufigkeit eines Pixels von ca. 15200. Die Farben des Hinter\-grundes erzeugen ein eindeutiges Maximum (im roten Oval). Werden die Schwellwerte auf entsprechende Werte links und rechts davon gesetzt, so bildet der eingeschlossene Bereich das Segment des Hintergrundes und der Rest das des Vordergrundes.}
+\label{Segmentierung_VorderHintergrund_Histogramm}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{cc}
+\subfloat[Eine automatisierte Trennung des Geparden vom Hindergrund ist nahezu nicht möglich. \cite{Jaehne1995}]{
+\label{fig:Segmentierung_Gepard_Original}
+\includegraphics[width=5cm]{Bilder/Gepard_ohneText}
+} &
+\subfloat[Ein eindeutiges Maximum ist nicht zu bestimmen und der Unterschied zum dazwischenliegenden Minimum ist zu gering um eine Trennung der Geparden von der Umgebung zu\newline ermöglichen. ]{
+\label{fig:Segmentierung_Gepard_Histgramm}
+\includegraphics[width=6.7cm]{Bilder/Segmentierung_Gepard_Histogramm}
+} \\
+\end{tabular}
+\caption{Grenzen der automatischen Segmentierung mit Schwellwerten. }
+\label{Segmentierung_Gepard}
+\end{figure} 
+
+\noindent Erschwerend kommt hinzu, dass die Randbereiche eines Objektes meist andere Farbwerte als die Kernbereiche aufweisen, z.B. durch unzureichende Beleuchtung, und sich somit die Größe des Segmentes, welches das Objekt repräsentiert, zusammen mit dem Betrag des Schwellwertes ändern kann (Abb. \ref{Segmentierung_VorderHintergrund_Kantenbreite}). \cite{Jaehne2002}
+
+Sind die Farbwerte des Hintergrundes und der Objekte inhomogen (Abb. \ref{Segmentierung_InhomogenerHintergrund}), so \glqq kann es unmöglich sein, einen globalen [Schwellwert] zu finden, der alle Objekte, sogar solche die sich klar vom Hintergrund abheben, segmentiert.\grqq\space \cite{Jaehne2002}
+\begin{figure}[!t]
+\centering
+\begin{tabular}{ll}
+\multicolumn{2}{c}{
+  \subfloat[Originalbild mit einem\newline breiten Randbereich.]{
+    \label{fig:Segmentierung_VorderHintergrund_Kantenbreite}
+    \includegraphics[width=4.5cm]{Bilder/Segmentierung_VorderHintergrund_Kantenbreite}
+  }
+}\\
+\subfloat[Ist der Schwellwert sehr groß, so werden breite Bereiche des Randes dem Hintergrund zugeordnet, wobei sich die Fläche des Vordergrundes verkleinert.]{
+\label{fig:Segmentierung_VorderHintergrund_Kantenbreite_Schmal}
+\includegraphics[width=4.5cm]{Bilder/Segmentierung_VorderHintergrund_Kantenbreite_Schmal}
+} &
+\subfloat[Bei einem kleinen Betrag für den Schwellwert bildet hingegen nahezu der gesamte Randbereich zusätzlich einen Teil des Vordergrundes.]{
+\label{fig:Segmentierung_VorderHintergrund_Kantenbreite_Breit}
+\includegraphics[width=4.5cm]{Bilder/Segmentierung_VorderHintergrund_Kantenbreite_Breit}
+} \\
+\end{tabular}
+\caption{Größenänderung der Segmente in Abhängigkeit vom gewählten Schwellwert.}
+\label{Segmentierung_VorderHintergrund_Kantenbreite}
+\end{figure}
+
+Als Folge dessen wird zu jedem Pixel eine Nachbarschaft mit einer kleineren Mengen an Pixeln erzeugt und nur diese für die Errechnung der Histogramme verwendet. Diese adaptiven Schwellwertverfahren nehmen dann die Zuordnung zu einem Segment anhand dieser lokalen Informationen vor \cite{MachineVision2005}.
+Somit würde trotz des inhomogen Hintergrundes in Abb. \ref{fig:Segmentierung_InhomogenerHintergrund} eine Segmentierung erfolgen, welche die drei Objekte und den Hintergrund voneinander trennt.\\
+
+\noindent Trotz dieser Nachteile kommen pixelbasierte Verfahren zur Anwendung, da sie zum einen schnell zu berechnen sind und zum anderen davon profitieren, dass sich die Farbwerte eines Objektes im Allgemeinen nur geringfügig ändern, wenn seine Position im Bild variiert.
+
+\noindent Durch die Betrachtung einzelner Farbkanäle können zusätzliche Informationen\linebreak erlangt werden, welche eine Segmentierung ermöglichen oder deren Ergebnis verbessern. Als Resultat ist ein mehrdimensionales Histogramm zu untersuchen und geeignet zu zerlegen (Clusterung).
+\begin{figure}[!t]
+\centering
+\begin{tabular}{cc}
+\subfloat[Originalbild mit unterschiedlichen Farbwerten des Hintergrundes und der Objekte.]{
+\label{fig:Segmentierung_InhomogenerHintergrund}
+\includegraphics[width=6.3cm]{Bilder/Segmentierung_InhomogenerHintergrund}
+} &
+\subfloat[Ist der Schwellwert groß genug, dass die Unterschiede im Hintergrund komplett ausgeglichen werden können, so werden die beiden kleineren Objekte ebenfalls dem Hintergrundsegment zugeordnet.]{
+\label{fig:Segmentierung_InhomogenerHintergrund_Ausblenden}
+\includegraphics[width=6.3cm]{Bilder/Segmentierung_InhomogenerHintergrund_Ausblenden}
+} \\
+\end{tabular}
+\caption{Erkennbarkeit von Objekten bei inhomogenem Hintergrund und\newline unterschiedlichen Objektfarbwerten}
+\label{Segmentierung_InhomogenerHintergrund}
+\end{figure}
+
+\clearpage
+
+\subsection{Kantenbasierte Methoden}
+Kanten ermöglichen oft die Erkennung kompletter Figuren durch wenige dominante Linien.
+Kantenbasierte Verfahren versuchen diese zu finden und verfolgen dabei den Ansatz, dass eine Diskontinuität im Bild den Übergang zwischen zwei\linebreak homogenen Bereichen darstellt, also eine Kante.
+Ein Segment wird dann von einer\linebreak umschließenden Kante begrenzt. Alle anderen Bereiche des Bildes bilden den\linebreak Hintergrund (Abb. \ref{Segmentierung_Kantenbasiert}). \cite{Ste02, Wilhelm2005, MachineVision2005}
+
+Eine Kante stellt einen kleinen Bereich im Bild dar, in welchem die Differenzen der Werte benachbarter Bildpunkte starke Größenunterschiede in einer spezifischen Richtung aufweisen. \cite{Wilhelm2005}
+
+\begin{figure}[!b]
+\centering
+\begin{tabular}{ccc}
+\subfloat[Originalbild mit zwei\newline Objekten im Vordergrund.]{
+\label{fig:Segmentierung_Kantenbasiert_Original}
+\includegraphics[width=4.3cm]{Bilder/Segmentierung_Kantenbasiert_Original}
+} &
+\subfloat[Durch das Auffinden der begrenzenden Kanten ist die Trennung von Vordergrund (innen) und Hintergrund (außen) möglich.]{
+\label{fig:Segmentierung_Kantenbasiert}
+\includegraphics[width=4.3cm]{Bilder/Segmentierung_Kantenbasiert}
+} \\
+\end{tabular}
+\caption{Kantenbasierte Segmentierung.}
+\label{Segmentierung_Kantenbasiert}
+\end{figure}
+
+Der Vorteil liegt darin, dass die Möglichkeit zur Segmentierung auch dann besteht, wenn Vorder- und Hintergrund die gleichen Eigenschaften aufweisen (Abb. \ref{Segmentierung_Kantenbasiert_Gleichartig}), solange die Kanten als Übergangsbereiche deutlich erfassbar bleiben (Abb. \ref{Segmentierung_Kantenbasiert_Verschmelzen}). Außerdem stellt die begrenzende Kante eines Objektes ein wichtiges Erkennungsmerkmal dar. \cite{Jaehne2002}\pagebreak
+\begin{figure}[!b]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Gleichartig}
+\includegraphics[width=4.5cm]{Bilder/Segmentierung_Kantenbasiert_Gleichartig}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Gleichartig_Laplace}
+\includegraphics[width=4.5cm]{Bilder/Segmentierung_Kantenbasiert_Gleichartig_Laplace}
+} \\
+\end{tabular}
+\caption{(a) Das Vordergrundobjekt weist die gleichen Eigenschaften auf wie der Hintergrund, wodurch eine Trennung mittels Schwellwerten kaum möglich ist. (b) Jedoch ermöglicht die umschließende Kante eine Trennung.}
+\label{Segmentierung_Kantenbasiert_Gleichartig}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Verschmelzen}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Verschmelzen}
+} &
+\subfloat[ ]{
+\label{fig:Segmentierung_Kantenbasiert_Verschmelzen_Laplace}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Laplace}
+} \\
+\end{tabular}
+\caption{Obwohl die einzelnen Bereiche des Bildes (a) relativ deutlich erkennbar sind, bereitet die Segmentierung des äußeren Ovals Probleme (b), da die Kanten im Bereich geringerer Diskontinuität nicht zusammenhängen.}
+\label{Segmentierung_Kantenbasiert_Verschmelzen}
+\end{figure}
+
+\noindent Nachteilig ist, dass Kanten auch Helligkeitsunterschiede, z.B. Schatten (Abb. \ref{fig:Segmentierung_Kantenbasiert_Problem_Schatten}) darstellen oder in Oberflächenmustern (Abb. \ref{fig:Segmentierung_Kantenbasiert_Problem_Muster}) auftreten und somit ein Objekt auch aus mehreren homogenen Bereichen mit vielen inneren Kanten bestehen kann.
+Da diese für die Erkennung des Objektes meist nur eine untergeordnete Bedeutung haben und die Erkennungsqualität verringern, sollten sie entfernt werden.
+Dabei besteht aber meist das Problem, dass die Bedeutung einer Kante erst festgelegt werden kann, wenn das Objekt bekannt, die kantenbasierte Segmentierung also bereits abgeschlossen ist. \cite{Wilhelm2005}\\
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{cc}
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Problem_Schatten}
+\includegraphics[width=5.3cm]{Bilder/Segmentierung_Kantenbasiert_Problem_Schatten}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Problem_Muster_Laplace}
+\includegraphics[width=5.3cm]{Bilder/Segmentierung_Kantenbasiert_Problem_Schatten_Laplace}
+} \\
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Problem_Muster}
+\includegraphics[width=5.3cm]{Bilder/Segmentierung_Kantenbasiert_Problem_Muster}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Problem_Muster_Laplace}
+\includegraphics[width=5.3cm]{Bilder/Segmentierung_Kantenbasiert_Problem_Muster_Laplace}
+} \\
+\end{tabular}
+\caption{
+Die Beleuchtung der Szene bewirkt einen scharf abgegrenzten Schatten der Objekte (a) auf der dahinterliegenden Wand, wodurch Kanten (b) gefunden werden die keine Abgrenzung irgendeines Objektes darstellen. Findet sich eine deutliche Musterung der Oberflächen im Bild (c), dann resultiert daraus meist eine große Anzahl an Kanten (d) innerhalb sonst homogener Bereiche. \cite{Objektschatten2006, Barbara2002}
+}
+\label{Segmentierung_Probleme}
+\end{figure}
+
+\noindent Die Eigenschaften der Kanten eines Segmentes, wie Länge, Krümmung und relative Anordnung, stellen Möglichkeiten dar derart umschlossene Objekte zu erkennen,\linebreak sofern diese nicht aufgrund teilweiser Verdeckung durch andere Objekte oder\linebreak Änderungen der Kanteneigenschaften als Folgen einer Objektbewegung beeinträchtigt sind (Abb. \ref{Segmentierung_Kantenbasiert_Objektbewegung}). \cite{Wilhelm2005}
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Objektbewegung1}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Objektbewegung1}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Objektbewegung1_Laplace}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Objektbewegung1_Laplace}
+} \\
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Objektbewegung2}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Objektbewegung2}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Kantenbasiert_Objektbewegung2_Laplace}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Kantenbasiert_Objektbewegung2_Laplace}
+} \\
+\end{tabular}
+\caption{Die Bilder (a) und (c) sind Teile einer Sequenz und zeigen eine sich drehende Figur. (b) und (d) lassen die korrespondierenden Kanten erkennen. Falls die Erkennung des Objektes in (b) auf die charakteristische Kante des Elefantenrüssels basiert, so ist ihr Versagen in (d) nahezu sicher, da sich deren Krümmung und Länge drastisch verändert haben. \cite{Jaehne2002}}
+\label{Segmentierung_Kantenbasiert_Objektbewegung}
+\end{figure}
+
+\subsection{Regionenbasierte Methoden}
+Diese Methoden zielen darauf ab, die Zerlegung so vorzunehmen, dass jedes Segment einer homogenen Fläche entspricht (Abb. \ref{Segmentierung_Region}). Hierzu wird ein Kriterium definiert, welches die Homogenität zweier benachbarter Bildbereiche beschreibt und somit eine Aussage darüber zulässt, ob diese einander ausreichend ähnlich sind und folglich zum gleichen Segment zugeordnet werden können. \cite{Ste02}
+
+Im Vergleich zu pixelbasierten Methoden, bei denen vom eigentlichen Objekt losgelöst auch einzelne voneinander isolierte Bereiche entstehen, formt sich hierbei eine zusammenhängende Fläche.
+Diese Verbundenheit stellt sich für die Erkennung der dargestellten Bildobjekte dahingehend als vorteilhaft dar, dass sie ein wichtiges Merkmal eines Objektes repräsentiert. \cite{Jaehne2002}
+
+Nachteilig ist, dass zum einen gemusterte Bereiche eventuell als inhomogen\linebreak betrachtet und in mehrere Segmente zerlegt werden, zum anderen aber unterschiedliche Bereiche auch zu einem Segment zusammenfallen können, wie in Abb. \ref{Segmentierung_Region_Textur} dargestellt.
+\begin{figure}[!t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Region}
+\includegraphics[width=5.2cm]{Bilder/Segmentierung_Region}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Region_Segmentiert}
+\includegraphics[width=5.2cm]{Bilder/Segmentierung_Region_Segmentiert}
+} \\
+\end{tabular}
+\caption{(a) Die Regionen im Bild besitzen unterschiedliche Eigenschaften im Vergleich zueinander, sind aber in sich relativ homogen. Als Folge dessen lassen sich vier Segmente (b) bilden.}
+\label{Segmentierung_Region}
+\end{figure}
+
+\begin{figure}[!b]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Region_Textur}
+\includegraphics[width=5.2cm]{Bilder/Segmentierung_Region_Textur}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Region_Textur_Segmentiert}
+\includegraphics[width=5.2cm]{Bilder/Segmentierung_Region_Textur_Segmentiert}
+} \\
+\end{tabular}
+\caption{(a) Das streifengemusterte Bild enthält den Schriftzug \glqq Beispiel\grqq. (b) Werden die beiden Bereiche (Schriftzug und Hintergrund) nicht als homogen betrachtet, erfolgt die Zerlegung zu teilweise einem Segment (Grün) pro Linie. Andere unterschiedliche Bereiche formen hingegen ein Segment (Rot).
+}
+\label{Segmentierung_Region_Textur}
+\end{figure}
+
+\subsection{Modellbasierte Methoden}
+Alle bisherigen Methoden verwenden lediglich Informationen, welche aus dem Bild selbst gewonnen werden können, ohne spezielles Wissen über die Form der\linebreak abgebildeten Objekte. Ist diese aber in Form entsprechender Modelle (Abb. \ref{fig:Segmentierung_Modellbasiert_Tapete_Template}) vorhanden, so ermöglichen dies eine Nutzung darauf basierender Methoden. \cite{Jaehne2002}
+
+Beispielsweise ist die Suche des Modells im Bild möglich.
+Hierzu erfolgt die\linebreak Definition eines Maßes für die Ähnlichkeit zwischen zwei Bildbereichen und die anschließende Bestimmung der Region im Originalbild, welche die größte Korrespondenz zwischen dieser Region und dem Modell aufweist. Eine Segmentierung erfolgt dann in die Menge der gefundenen Objekte und den Hintergrund. \cite{Ste02, Wilhelm2005, DistFunc1995}
+%\linebreak
+
+\begin{figure}[!t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[]{
+\label{fig:Segmentierung_Modellbasiert_Tapete}
+\includegraphics[width=5cm]{Bilder/Segmentierung_Modellbasiert_Tapete}
+} &
+\subfloat[]{
+\label{fig:Segmentierung_Modellbasiert_Tapete_Template}
+\includegraphics[width=1cm]{Bilder/Segmentierung_Modellbasiert_Tapete_Template}
+} \\
+\end{tabular}
+\caption{(a) Das Auffinden der Blüten ist trotz der ungleichmäßigen Beleuchtung ohne größere Probleme möglich, wenn ein Modell (b) verfügbar ist. \cite{Wilhelm2005}
+}
+\label{Segmentierung_Region}
+\end{figure}
+
+Der Vorteil besteht darin, dass ein Objekt erkennbar ist, obwohl es aus unterschiedlichsten, auch nicht zusammenhängenden Flächen besteht. Auch teilweise verdeckte Kanten und ungünstige Farbwerte können ausgeglichen werden.
+Als nachteilig stellt sich allerdings der größere Rechenaufwand und die Empfindlichkeit gegenüber\linebreak Änderungen des korrespondierenden Objektes in Bezug auf Größe, Lage und Form heraus. \cite{Wilhelm2005, Borgefors1988}
+
+\subsection{Verfahren mit und ohne Vorwissen}
+Zur Durchführung der Segmentierung eines Bildes liegt idealerweise Wissen darüber vor, welche Objekte darin abgebildet wurden, welche Form diese aufweisen und was für Randbedingungen bei der Aufnahme vorlagen (z.B. die Richtung des Licht\-einfalls). In diesen Fällen ist meist eine nachträgliche Korrektur störender Einflüsse möglich (Abb. \ref{Segmentierung_InhomogenerHintergrund}), woraus eine einfache und schnelle Zerlegung des Bildes mit guten Ergebnissen resultiert.
+
+\noindent So kann ein inhomogener Hintergrund ebenso ausgeglichen werden um die Qualität zu erhöhen, wie eine teilweise verdeckte Kante oder eine Region, welche keine klare Abgrenzung zu einer anderen aufweist.
+Durch das Wissen über die Änderungen an der Form eines Objektes im Bild oder über seine Verdeckung, ist eine Anpassung des Modells durchführbar, was in einer qualitativ besseren Segmentierung resultiert.
+
+Beispielsweise wird die Segmentierung von Abb. \ref{Segmentierung_Gepard} möglich, wenn die begrenzenden Kanten eines Geparden und seine Fellmusterung bekannt sind, sowie Wissen darüber vorliegt, dass der mittlere Bereich verdeckt ist.
+
+Oft sind aber Informationen über das Objekt oder die Einflüsse der Umgebung nicht zugänglich, oder das dargestellte Objekt entspricht nicht exakt dem Modell, die Vielfalt an Änderungen des Objektes verhindern dessen Erstellung bzw. übersteigen die verfügbaren Speicherkapazitäten.
+
+Folglich werden Verfahren benötigt, welche ohne derartige Informationen zu einem Ergebnis gelangen bzw. diese aus dem zu verarbeitenden Bild gewinnen können.
+
+\subsection{Kapitelübersicht}
+Ziel ist die Entwicklung eines Verfahrens zur automatischen Segmentierung von\linebreak Bildern und Videosequenzen. Die auftretenden Einschränkungen bedingen die Wahl entsprechender Algorithmen, deren Grundlagen in Kapitel 2 dargestellt werden.
+
+Kapitel 3 erläutert die Zusammensetzung des Verfahrens aus diesen Algorithmen, welches in Kapitel 4 einer genaueren Betrachtung unterzogen wird.
+
+Eine abschließende Zusammenfassung der erzielten Ergebnisse und mögliche\linebreak Verbesserungen, die jedoch nicht Teil dieser Arbeit sind, folgt in Kapitel 5.
+

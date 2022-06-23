@@ -1,0 +1,352 @@
+%\appendix
+\addcontentsline{toc}{chapter}{Anhang}
+\chapter{}
+%\section{Quality of Decomposition applying a Pyramid}\label{Eval_KMeans_KOptimum_Bsp}
+% 
+%  Display of Qualities of Decompositions at different Number of Clusters and Pyramid Steps.
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[Originalbild \glqq Blume.bmp\grqq]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume}
+%        \includegraphics[width=6cm]{Bilder/Blume}
+%      }\\
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL1_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL1/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL1_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL1/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL1_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL1/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL1_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL1/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for this picture at $A_C=20$ and one pyramid step.}
+%    \label{Eval_KMeans_KOptimum_Blume1}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL2_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL2/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL2_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL2/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL2_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL2/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL2_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL2/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for this picture at $A_C=20$ and two pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Blume2}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL3_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL3/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL3_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL3/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL3_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL3/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL3_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL3/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for this picture at $A_C=20$ and three pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Blume3}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      $PL = 4$ \\
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL4_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL4/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL4_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL4/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL4_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL4/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Blume_PL4_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Blume/PL4/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition of this picture for  $A_C=20$ and four pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Blume4}
+%  \end{figure}
+%
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[Originalbild \glqq Lena.bmp\grqq]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena}
+%        \includegraphics[width=6cm]{Bilder/Lena}
+%      }\\
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL1_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL1/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL1_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL1/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL1_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL1/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL1_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL1/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and one pyramid step.}
+%    \label{Eval_KMeans_KOptimum_Lena1}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL2_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL2/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL2_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL2/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL2_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL2/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL2_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL2/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and two pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Lena2}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL3_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL3/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL3_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL3/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL3_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL3/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL3_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL3/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and three pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Lena3}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL4_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL4/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL4_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL4/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL4_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL4/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Lena_PL4_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Lena/PL4/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of composition for $A_C=20$ and four pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Lena4}
+%  \end{figure}
+%
+%  
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[Originalbild \glqq Grain.bmp\grqq\cite{BerkeleyDB}]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain}
+%        \includegraphics[width=6cm]{Bilder/Grain}
+%      }\\
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL1_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL1/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL1_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL1/IterK10/Q}
+%      } \\
+%
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL1_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL1/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL1_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL1/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and one pyramid step.}
+%    \label{Eval_KMeans_KOptimum_Grain1}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL2_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL2/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL2_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL2/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL2_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL2/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL2_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL2/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and two pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Grain2}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL3_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL3/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL3_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL3/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL3_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL3/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL3_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL3/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and three pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Grain3}
+%  \end{figure}
+%
+%  \begin{figure}[!t]
+%    \begin{tabular}{ll}
+%      \subfloat[$|I_\textrm{KMeans}| = 5$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL4_IterK5}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL4/IterK5/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 10$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL4_IterK10}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL4/IterK10/Q}
+%      } \\
+%      \subfloat[$|I_\textrm{KMeans}| = 15$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL4_IterK15}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL4/IterK15/Q}
+%      } &
+%      \subfloat[$|I_\textrm{KMeans}| = 20$]{
+%        \label{fig:Eval_KMeans_KOptimum_Grain_PL4_IterK20}
+%        \includegraphics[width=6.5cm]{Bilder/Eval/KMeans/KOptimum/Grain/PL4/IterK20/Q}
+%      }
+%    \end{tabular}
+%    \caption{The quality $J(x)$ of decomposition for $A_C=20$ and four pyramid steps.}
+%    \label{Eval_KMeans_KOptimum_Grain4}
+%  \end{figure}
+\section{Verwendete Beispielbilder}\label{Beispielbilder}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Bilder/Lena}
+\caption{\glqq Lena\grqq\space\cite{BerkeleyDB} mit einer Größe von $512\times512$ Pixeln\newline und 148279 Farben.}
+\label{BspLena}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth]{Bilder/Grass}
+\caption{\glqq Grass\grqq\space\cite{BerkeleyDB} mit einer Größe von $481\times321$ Pixeln\newline und 15933 Farben.}
+\label{BspGrass}
+\end{figure}
+  
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth]{Bilder/Grain}
+\caption{\glqq Grain\grqq\space\cite{BerkeleyDB} mit einer Größe von $481\times321$ Pixeln\newline und 48705 Farben.}
+\label{BspGrain}
+\end{figure}
+  
+
+\section{Graph der Klassenvererbung}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=11.3cm]{Bilder/Vererbungsgraph_neu}
+    \caption{Vererbungsgraph der Klassen des Verfahrens. Die leeren Klassen sind auf den folgenden Seiten erklärt.}
+    \label{Vererbungsgraph}
+  \end{figure}
+  \begin{figure}[p]
+    \centering
+    \includegraphics[width=5.1cm]{Bilder/Vererbungsgraph_Cluster}
+    \caption{Klasse Cluster}
+    \label{Vererbungsgraph}
+  \end{figure}
+  \begin{figure}[p]
+    \centering
+    \includegraphics[width=8cm]{Bilder/Vererbungsgraph_KMeans}
+    \caption{Klasse KMeans}
+    \label{Vererbungsgraph}
+  \end{figure}
+  \begin{figure}[p]
+    \centering
+    \includegraphics[width=5.1cm]{Bilder/Vererbungsgraph_particle}
+    \caption{Klasse particle}
+    \label{Vererbungsgraph}
+  \end{figure}
+  \begin{figure}[p]
+    \centering
+    \includegraphics[width=8cm]{Bilder/Vererbungsgraph_Point}
+    \caption{Klasse Point}
+    \label{Vererbungsgraph}
+  \end{figure}
+

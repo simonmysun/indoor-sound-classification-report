@@ -1,0 +1,168 @@
+\chapter{Verfahren}\label{Verfahren}
+  Nachdem im vorherigen Kapitel die Algorithmen eingeführt wurden, erfolgt nun die Beschreibung des daraus zusammengesetzten Verfahrens. Die Bearbeitungsschritte vom Ursprungsbild bis zu dessen Segmentierung sind in Abb. \ref{Formelgrafik} schematisch dargestellt.
+  \begin{figure}[!b]
+    \centering
+    \includegraphics[width=14cm]{Bilder/Formelgrafik}
+    \caption{Schematischer Ablauf des Verfahrens (Zur besseren Übersicht wurde auf die Darstellung der Pyramide verzichtet)}
+    \label{Formelgrafik}
+  \end{figure}
+
+  Nach dem Laden des Bildes $P$ unter Nutzung der Funktionen von ImageJ bzw. der Extraktion eines Einzelbildes $P(t)$ zum Zeitpunkt $t$ aus einem Video mittels JMU-Funktionen beginnt die Bearbeitung. Da daraufhin in beiden Fällen ein einzelnes Bild vorliegt, wird die Beschreibung im Wesentlichen dafür erfolgen und nur spezielle Gegebenheiten für Videos erfahren eine ausdrückliche Erwähnung.
+
+   Aus jedem Bild erfolgt die Konstruktion einer Pyramide und die Abbildung jeder ihrer Stufen in einen eigenen Merkmalsraum. Daraufhin beginnt in der obersten die Erstellung einer Matrix, welche die Entfernungen aller Merkmalsvektoren zueinander speichert. Die Bestimmung der Startpositionen der Centroide mittels der Partikel Schwarm Opimierung schließt sich daran ebenso an wie K-Means. Die daraus errechneten Lösungen finden in einem weiteren Durchgang ihre Verwendung, welcher wieder mit der Matrixerstellung beginnt und Fehler minimieren soll. Sind alle Durchgänge vollzogen, folgt die Übertragung der Lösungen in die nächste, darunterliegende Stufe, ähnlich Schritt 6 von Abb. \ref{Formelgrafik},  als Kandidaten und beginnt erneut mit einem Durchgang.  
+   Ist die Bearbeitung in der untersten Ebene abgeschlossen, so liegt das Endergebnis vor und die Segmentierung des Bildes kann darauf aufbauend durchgeführt werden.
+\pagebreak
+\section{Pyramide}
+  Mit den vorgegebenen Werten $PF$, der hier auf 2 gesetzt ist, und $PL$ wird eine Pyramide von $P$ konstruiert. Damit reduziert sich die Menge der Pixel, welche in jeder Stufe zu bearbeiten sind. Hauptsächlich aber soll das eine Verringerung der Anzahl unterschiedlicher Farben (Tabelle \ref{FarbanzahlenänderungPyramide} und Abb. \ref{Pyramidengrafik}) herbeiführen, da speziell\linebreak natürliche Bilder viele Nuancen der gleichen Farbe innerhalb eines Bereiches\linebreak aufweisen. Ein Nebeneffekt der Durchschnittsbildung (Formel \ref{DefPyramidenformel}) bei der Erstellung der Pyramide ist, dass alle oberen Stufen ($l\geq1$) in zunehmendem Umfang tiefpassgefiltert (Abb. \ref{Tiefpassfilter}) sind, d.h. kleinere Elemente, welche nur geringfügige Unterschiede zur unmittelbaren Umgebung im Bild darstellen (Farbnuancen) oder welche durch Rauschen entstehen, finden nur eine stark abgeschwächte oder gar keine weitere Repräsentation. Grossflächige oder stark ausgeprägte, wichtige Bereiche bleiben hingegen deutlich erhalten. \cite{Jaehne2002, Li2003a, Jung2007}
+  \begin{figure}[!t]
+    \centering
+    \includegraphics[width=5cm]{Bilder/Tiefpassfilter}
+    \caption{Beispiel für die Tiefpassfilterung bei mehreren Pyramidenstufen. Die kleinen Rauschpunkte werden schnell beseitigt. Zu kleine Details (große Punkte) verschwinden über mehrere Stufen hinweg und nur deutliche Elemente (Viereck) verbleiben.}
+    \label{Tiefpassfilter}
+  \end{figure}
+
+  \begin{table}
+    \centering
+    \begin{tabular}{ccc}\label{FarbanzahlenänderungPyramide}
+      Pyramidenstufe & Größe der Stufe & Farbanzahl\\
+      0	&	480x320	&	42280\\
+      1	&	240x160	&	24219\\
+      2	&	120x80	&	7493\\
+      3	&	60x40	&	2111\\
+      4	&	30x20	&	570\\
+      5	&	15x10	&	148\\
+      6	&	8x5	&	40\\
+    \end{tabular}
+    \caption{Anzahl der Farben in jeder Pyramidenstufe von Abb. \ref{Pyramidengrafik}}
+  \end{table}
+
+  Dies führt dazu, dass bei der Bearbeitung mit der obersten Stufe begonnen wird, da dort nur noch die am stärksten hervortretenden Elemente existieren. Nachfolgenden Algorithmen ermöglicht dies, die charakteristischen Merkmale dieser Elemente zu finden ohne von zu vielen Details verlangsamt zu werden. In der nächsttieferen Stufe folgt die Verbesserung der gefundenen Merkmale durch die hier vorhandenen Details. 
+  Dieser Vorgang der fortschreitenden Präzisierung folgt für alle Stufen und endet nach der Bearbeitung des Ursprungsbildes mit den Kenntnissen über dessen charakteristische Merkmale. \cite{Jaehne2002}
+
+  Eine Schwierigkeit für das Clustering ist der Effekt, dass durch die Durchschnittsbildung in den höheren Stufen neue Farben entstehen (Abb. \ref{fig:PyrMehrFarben} und \ref{fig:PyrRaumMehrFarben}) oder bisher vorhandene verschwinden (Abb. \ref{fig:PyrWenigerFarben} und \ref{fig:PyrRaumWenigerFarben}). Als Folge daraus kann die Anzahl der Cluster variieren und somit zu fehlerhaften Lösungen in dieser Stufen führen. 
+  Da sie aber nicht die unterste Stufe betrifft, ist ein korrektes Endergebnis trotzdem möglich.
+  \begin{figure}[!b]
+    \centering
+    \begin{tabular}{ccc}
+      \subfloat[Originalbild mit 2 Farben]{
+        \label{fig:PyrOriginal}
+	\includegraphics[width=3.6cm]{Bilder/PyrOriginal}
+      } &
+      \subfloat[Aufgrund der Mittel- wertbildung ist eine dritte Farben im Übergangsbereich hinzugekommen.]{
+        \label{fig:PyrMehrFarben}
+        \includegraphics[width=3.6cm]{Bilder/PyrMehrFarben}
+      } &
+      \subfloat[Wenn die Bildstrukturen im Vergleich zum Bereich der Mittelwertbildung zu klein sind, verbleibt nur noch eine resultierende Farbe.]{
+        \label{fig:PyrWenigerFarben}
+        \includegraphics[width=3.6cm]{Bilder/PyrWenigerFarben}
+      } \\
+      \subfloat[Histogramm des Originalbildes mit 2 Farben.]{
+        \label{fig:PyrRaumOriginal}
+	\includegraphics[width=4cm]{Bilder/PyrRaumOriginal}
+      } &
+      \subfloat[Durch die dritte Farbe ändert sich die Zusammensetzung des Histogrammes.]{
+        \label{fig:PyrRaumMehrFarben}
+        \includegraphics[width=4cm]{Bilder/PyrRaumMehrFarben}
+      } &
+      \subfloat[Nur noch die gemittelte Farbe ist im Histogramm vorhanden.]{
+        \label{fig:PyrRaumWenigerFarben}
+        \includegraphics[width=4cm]{Bilder/PyrRaumWenigerFarben}
+      } \\
+    \end{tabular}
+    \caption{Auswirkungen der Durchschnittsbildung auf die Farbanzahl}
+    \label{PyramideFarbänderung}
+  \end{figure}
+
+  Grundsätzlich ist ein Einsatz der Pyramide nicht zwingend notwendig, aber die Möglichkeit die Ausführungsgeschwindigkeit der nachfolgenden Algorithmen damit zu erhöhen, stellt einen guten Grund für ihre Nutzung dar, zumal der notwendige Bedarf an Speicherplatz gegenüber dem Ursprungsbild nur höchstens $\frac{4}{3}$ beträgt und die Zeit zur Erstellung nur \cite{Jaehne2002}:
+  \begin{equation}\label{LaufzeitPyr}
+    \mathcal O \left(\sum\limits_{l=0}^{PL-1}(B^l\cdot H^l)\right)
+  \end{equation}
+  
+  Nach der Erstellung der Pyramide werden die einzelnen Stufen punktweise in den Merkmalsraum transformiert (Schritt 1 von Abb. \ref{Formelgrafik}), welcher dieser Stufe zugeordnet ist. Die weitere Bearbeitung beginnt mit der obersten Stufe und führt die PSO und K-Means vollständig darauf aus, bevor die gewonnenen Zwischenergebnisse als Startangaben in der nächsten Stufe zum Einsatz kommen.
+  
+\section{PSO}
+  Mit dem Ziel die für K-Means notwendigen Angaben für die Startpositionen der Centroide und $A_C$ zu erhalten, erfolgt zuerst die zufällige Auswahl (Schritt 2 von Abb. \ref{Formelgrafik}) einer Menge $\mathbb{K}=\{\vec{b}_1, ..., \vec{b}_{A_{C_\textrm{max}}}\}$ von $A_{C_\textrm{max}}$ Merkmalsvektoren.
+  
+  Diese werden als mögliche Kandidaten betrachtet und entsprechend ihrer Auswahlreihenfolge einem Element aus einer Menge binärer Werte zugeordnet (Schritt 3 von Abb. \ref{Formelgrafik}).
+  Der durch diese Menge aufgespannte Raum stellt den Suchraum der binären Variante der Partikel Schwarm Optimierung dar.
+  Die Positionsangaben $\vec{x}_s(t_P)$ und $\vec{y}_s(t_P)$ des Partikels $s$ sind somit Vektoren mit jeweils $A_{C_\textrm{max}}$ Komponenten aus der Menge $\{0,1\}$ und werden gemäß Formel \ref{DefPositionsupdateBinary} verändert.
+  Weist die $j$-te Komponente $y_{sj}(t_P)$ der besten selbstgefundenen Position $\vec{y}_s(t_P)$ den Wert 1 auf, so stellt der zugehörige Kandidat einen Teil der Lösung dar. Die Menge $\mathbb{K}_s(t_P)$ aller derartigen Kandidaten und die Summe aller Komponentenwerte $A_{Cs}(t_P)$ entsprechen der Lösung bzgl. Startposition und Clusteranzahl, welche dieses Partikel $s$ zum Iterationszeitpunkt $t_P\in I_\textrm{PSO}$, repräsentiert. \cite{Omran2006}
+  \begin{equation}\label{PartikelLösungskandidaten}
+    \mathbb{K}_s(t_P) = \{\vec{b}_j \textrm{\space}\vert\textrm{\space} \vec{b}_j\in\mathbb{K}, y_{sj}(t_P)\equiv 1 \}
+  \end{equation}
+  \begin{equation}\label{PartikelLösungsAC}
+    A_{Cs}(t_P) = \sum\limits_{j=1}^{A_{C_\textrm{max}}} y_{sj}(t_P)
+  \end{equation}
+
+  \noindent Da keine Änderungen an der Position der Kandidaten während der Optimierung vorgenommen werden, ist die Erstellung der Matrix $V_{C\mathbb{D}}(t_P)$ (Formel \ref{DefKMeans_Abstand}) mit $A_{C_\textrm{max}}$ Spalten und $A_{\mathbb{D}}$ Zeilen und der Quadrierung aller paarweisen Abstände für alle Kandidaten vor Beginn der Optimierung sinnvoll, da die aufwendigen Abstandsberechnungen somit nur einmalig anfallen. Für die bei der Optimierung benutzte Qualitätsfunktion $J(t_P)$ sind dann nur die Spalten in $V_{C\mathbb{D}}(t_P)$ zu beachten, welche den Kandidaten in $\mathbb{K}_s(t_P)$ entsprechen. Somit kann die Berechnung von $intra(t_P)$\linebreak (Formel \ref{DefIntra}) und $inter(t_P)$ (Formel \ref{DefInter}) im Wesentlichen auf die Bildung der Summe von Summen je eines Produktes und auf die Suche eines Minimums reduziert werden, da sich die notwendigen Abstandswerte in $V_{C\mathbb{D}}(t_P)$ finden.
+
+  Es folgt die Durchführung der Partikel Schwarm Optimierung (Schritt 4 von Abb. \ref{Formelgrafik}) und nach der letzten Iteration die Bestimmung von $\tilde{\vec{y}}(t_P)$ (Formel \ref{DefGlobalBest}). Die dadurch repräsentierten Centroide bestimmen die Clusterung, welche die Lösung der Partikel Schwarm Optimierung darstellen.
+
+\subsection{Nachbarschaft}
+  Topologien, welche die Entfernung im Suchraum als Kriterium benutzen, werden nicht verwendet, da immer ein zumindest allmählicher Informationsaustausch zwischen allen Mitgliedern des Schwarms existieren soll. Dies wäre aber nur bei einem großen Wert für die Entfernung $r$ möglich, wodurch $N_S=\mathbb{S}$ mit den daraus resultierenden Nachteilen entstünde.
+  Außerdem ist die Berechnung einer Nachbarschaft aufbauend auf deren Indexpositionen deutlich einfacher und schneller.
+  
+  Wie in \cite{Omran2005} und \cite{Huang2005} gezeigt, weist die gbest-Topologie den Vorteil auf, dass eine schnelle Konvergierung hin zur besten Position erfolgt und somit eine gute Lösung schnell verfügbar ist. Allerdings untersucht der Schwarm dadurch Teile des Suchraumes nicht und findet somit eventuell nur ein lokales Minimum. Die lbest-Topologie konvergiert dem Gegenüber langsamer, untersucht dafür aber einen größeren Bereich des Suchraumes und findet somit wahrscheinlich eine bessere Lösung. Die v.Neumann-Topologie verbindet die Vorteile von gbest mit lbest, d.h. die größere Geschwindigkeit der Informationsausbreitung mit dem Finden besserer Lösungen, weshalb sie zur Anwendung kommt.
+
+\subsection{Vor- und Nachteile}
+  Die beste Lösung zu finden erfordert bei bekanntem $A_C$ eine erschöpfende Suche mittels Durchprobierens aller möglichen Kombinationen von Centroiden, also
+  \begin{equation}
+    {A_\mathbb{D}\choose A_C}
+  \end{equation}\\
+  und bei unbekanntem $A_C$ sogar das Prüfen aller Kombinationen von Centroiden mit allen Centroidanzahlen $k\in\{2, ..., A_{C_\textrm{max}}\}$, also:
+
+  \begin{equation}
+    \sum\limits_{k=2}^{A_{C_\textrm{max}}} {A_\mathbb{D}\choose k}
+  \end{equation}\\
+  Der dazu notwendige Aufwand ist in den meisten Fällen extrem hoch, so dass Heuristiken wie K-Means und die Partikel Schwarm Optimierung zum Einsatz kommen.
+
+  Um den Aufwand zu verringern, werden hierzu $A_{C_\textrm{max}}$ Kandidaten der Startpositionen für K-Means zufällig gewählt und die Geeignetsten daraus als Centroide extrahiert. Da dafür aber wiederum eine erschöpfende Untersuchung in der Kandidatenmenge notwendig wäre und die Anzahl an möglichen Kandidatenkombinationen
+  \begin{equation}
+    \sum\limits_{i=2}^{A_{C_\textrm{max}}}{A_{C_\textrm{max}}\choose i}
+  \end{equation}\\
+  immer noch beträchtlich ist, muss auch diese Auswahl mittels einer Heuristik (der PSO) durchgeführt werden.
+
+  Somit ist das Auffinden der besten Lösung weder bei der Menge der Kandidaten noch bei der der Centroide sichergestellt. Darüber hinaus kann auch das Ermitteln einer guten Lösung nur insofern garantiert werden, dass die beste Lösung die ein Partikel jemals während der Iterationen der PSO untersuchte auch dem Ergebnis der Optimierung entspricht.
+ 
+  Gegenüber der mehrmaligen Anwendung von K-Means mit jeweils unterschiedlicher Anzahl an Clustern \cite{Ray1999}, bei der sich die Abstände bei jeder Iteration ändern und folglich für alle Merkmalsvektoren neu zu berechnen sind, ergibt sich der Vorteil, dass die Clusteranzahl hier schneller ermittelt werden kann, da sich die Abstände bei jeder Iteration nicht ändern.
+  Somit beträgt die Ausführungsgeschwindigkeit
+  \begin{equation}
+    \mathcal O(A_\mathbb{S} \cdot |I_\textrm{PSO}| \cdot \tau_\textrm{PSO})
+  \end{equation}  
+  wobei $|I_\textrm{PSO}|$ der Anzahl an Iterationen der PSO und $\tau_\textrm{PSO}$ dem Aufwand zur Errechnung von $J(t_P)$, also $\mathcal O(J(t_P)) = \mathcal O(A_\mathbb{D} \cdot A_{C_\textrm{max}})$, entspricht. 
+
+\section{K-Means}
+  Nachdem die Startpositionen der Centroide und damit der Wert für $A_C$ bestimmt wurden, folgt die Ausführung von K-Means.
+  
+  Aufgrund der Nutzung der Pyramide berechnet sich die Clusterung zunächst für den Merkmalsraum, der aus der aktuellen Pyramidenstufe gebildet wurde. Die Anzahl an Iterationen ist dabei vorgegeben um die maximale Bearbeitungszeit festzulegen.
+  Nach der letzten Iteration liegen $A_C$ Centroide vor.
+  Diese bilden zusammen mit neuen, zufällig ausgewählten eine neue Menge $\mathbb{K}$, die für einen weiteren Durchgang (Schritt 6 von Abb. \ref{Formelgrafik}) Verwendung findet, welcher mögliche Fehler bei der Centroidenbestimmung kompensieren soll.
+  Nach dem letzten Durchgang folgt die Übertragung der Positionen der Ergebniscentroiden in den Merkmalsraum der nächsttieferen Stufe mit Hilfe der Formel \ref{DefKMeans_NeuerCentroid}. Sie bilden eine Teilmenge der dortigen Menge $\mathbb{K}$ und das Verfahren setzt sich mit Schritt 2 von Abb. \ref{Formelgrafik} fort.
+  
+  Nach dem letzten Durchgang in der untersten Pyramidenstufe liegt die endgültige Clusterung vor. Dadurch ist eine Zuordnung der Bildpunkte zu den Clustern und somit eine Bildsegmentierung möglich (Schritt 7 von Abb. \ref{Formelgrafik}).
+
+\subsection{Vor- und Nachteile}
+  Der negative Effekt, dass die Wahl der Startpositionen das Ergebnis beeinflusst, wird durch die zufällige Wahl der Kandidaten und die Vorarbeiten der PSO soweit wie möglich verringert.
+
+  Da in den oberen Stufen weniger Merkmalsvektoren vorhanden sind, ist es dem Algorithmus möglich mit weniger Iterationen eine gute Partition zu erzeugen als in den darunterliegenden. Somit können die Centroide die Position ihrer endgültigen Lösung mit insgesamt weniger Schritten erreichen und die Gesamtanzahl an Iterationsschritten kann verkleinert und auf die Pyramidenstufen verteilt werden, ohne dass es in einer Verschlechterung der Partitionsqualität resultiert.
+
+  Der Vorteil des Algorithmus liegt in der Ausführungsgeschwindigkeit
+  \begin{equation}
+    \mathcal O(\tau_\textrm{KMeans} \cdot |I_\textrm{KMeans}| \cdot \varrho_\textrm{KMeans})
+  \end{equation}  
+  die benötigt wird um den Merkmalsraum, welcher aus einer Stufe der Pyramide erstellt wurde, zu zerlegen.  
+  Dabei entspricht $\tau_\textrm{KMeans}$ dem Aufwand zum Errechnen von $V_{C\mathbb{D}}(t_K)$, also $\mathcal O(V_{C\mathbb{D}}(t_K)) = \mathcal O(A_{C_\textrm{max}}\cdot A_\mathbb{D})$, $\varrho_\textrm{KMeans}$ dem Bestimmen eines neuen Centroiden, in $\mathbb{O(A_{C_\textrm{max}}\cdot A_\mathbb{D})}$, und $|I_\textrm{KMeans}|$ der Anzahl an Iterationen von\linebreak K-Means. Eine Abhängigkeit von der Größe des Bildes liegt für K-Means selbst nicht vor. \cite{Omran2006}
+
+\section{Segmentierung und Laufzeit}
+  Nach der Clusterung des Merkmalsraumes stellt jeder Cluster ein Segment des Bildes dar. Die Zugehörigkeit eines Merkmalsvektors $\vec{d}=\varphi(p_{ij})$ zu einem Cluster bestimmt die Zuordnung des korrespondierenden Bildpunktes $p_{ij}$ zu einem Segment.
+
+  Die Gesamtlaufzeit des Verfahrens beträgt insgesamt
+  \begin{displaymath}
+    \mathcal O(\tau_\textrm{Pyramide} \cdot A_\mathbb{S} \cdot |I_\textrm{PSO}| \cdot \tau_\textrm{PSO} \cdot |I_\textrm{KMeans}| \cdot \tau_\textrm{KMeans} \cdot \varrho_\textrm{KMeans} \cdot |I_\textrm{C}|)
+  \end{displaymath}
+  wobei $|I_\textrm{C}|$ der Anzahl an Durchgängen (Schritt 6 aus Abb. \ref{Formelgrafik}) und $\tau_\textrm{Pyramide}$ dem Aufwand zum Erstellen der Pyramide (Formel \ref{LaufzeitPyr}) entspricht.
+
+
+\section{Implementierung}
+  Das in diesem Kapitel beschriebene Verfahren wurde plattformunabhängig, unter Nutzung der Funktionen von ImageJ und JMU, in Java implementiert und ist durch den Vererbungsgraph im Anhang \ref{Vererbungsgraph} beschrieben. Seine Evaluation erfolgt im nächsten Kapitel.
+

@@ -1,0 +1,397 @@
+%======================================================================
+%	Vorlage
+%======================================================================
+%	$Id$
+%	Matthias Kupfer
+%======================================================================
+%	Documentclass
+%======================================================================
+\documentclass[
+%	draft,			% Entwurfsmodus: Bilder als Rahmen,
+				% Überlängen werden deutlich markiert
+%	10pt,			% 
+	11pt,			% KOMA default
+%	12pt,			% 
+	a4paper,		% DIN A4
+%	twoside,		% Zweiseitig
+%	german,			%
+    english
+%----------------------------------------------------------------------
+% Die folgenden Befehle stammen aus dem KOMA Paket
+	headsepline,		% Linie unter der Kopfzeile	
+%	headnosepline,		%
+%	foodsepline,		% Linie über Fussnote	
+	footsepline=false,	%
+	automark,		% Kolumnentitel lebendig
+%	bigheadings,		% default: Überschriften gross setzen
+	headings=normal,	% Überschriften normal setzen
+%	smallheadings,		% Überschriften eher klein setzen
+	pointlessnumbers,	% Keinen Punkt hinter die letzte Zahl 
+				% eines Kapitels (auch bei Anhang)
+%	chapterprefix,		% Kapiteluberschriften "Kapitel"
+%	appendixprefix,		% Anhang
+%	openright,		% Kapitel auf der rechten (ungeraden) Seite 
+				% anfangen lassen
+	openany,		% 
+%	cleardoublestandard,	%
+	cleardoublepage=plain,	%
+%	cleardoubleempty,	%
+	abstracton,		%
+	index=totoc,		% Index soll im Inhaltsverzeichnis auftauchen
+	listof=totoc,		%
+	bibliography=totoc,	%
+%	parskip, 		% parskip-, parskip*, parskip+
+% 	halfparskip, 		% halfparskip-, halfparskip* und halfparskip+
+%	DIVclassic,
+% 	BCOR=8mm,		%%?? Bindungskorrektur: 
+				% BCOR<Breite des Bindungsverlustes> 
+]{scrreprt} 
+
+%======================================================================
+%	Bearbeitung sowohl mit LaTeX als auch mit pdfLaTeX ermoeglichen
+%======================================================================
+%\newif\ifpdf 
+	%\ifx\pdfoutput\undefined 
+	%\pdffalse 			% we are not running pdflatex 
+%\else 
+	%\pdfoutput=1 			% we are running pdflatex 
+	%\pdftrue 
+%\fi
+
+
+%======================================================================
+%	Verwendete Pakete
+%======================================================================
+
+%\usepackage{babel}		% Sprachen
+
+%% Latex mit deutschen Umlauten:
+%% http://www.cs.albany.edu/~herrmann/latex_umlaute/
+\usepackage[T1]{fontenc}	% EC-Schriften verwenden (vs. DC) da 8-Bit
+				% EC-Schriften als T1-kodierten CM-Schriften
+				% European/Ext.-Computer-Modern-(EC)-Schriften
+				% Umlaute, Anführungszeichen ...
+				% => Umlauten koennen richtig getrennt werden
+				% FAQ 5.3.2
+
+%\usepackage{ucs}		% Eingabe von ü,ö,ä,ß mit UTF-8 erlaubt
+%\usepackage[utf8]{inputenc}	% (auch in Include-Dateien)
+				% ! Zeichensatz der Dateien als UTF-8 !
+								
+\usepackage{ae,aecompl}		% virtuelle-CM-Fonts
+				% da EC nicht als PostScript-(Type-1) verfuegbar
+				% => keine echten Umlaute im PDF-Dokumen 
+				%(Problem bei Suche)
+				% By loading the ae package (\usepackage{ae}), 
+				% you loose some characters as mentioned in 
+				% README. 
+				% The package aecompl by Denis Roegel restores
+				% these characters which are taken from the ec 
+				% fonts. If you use pdftex, you will get these 
+				% characters as bitmaps, but this might be 
+				% better than not having them at all.
+\usepackage{bbold}
+\usepackage{amsmath}
+\usepackage[hang]{caption}
+%\usepackage{times, mathptm}	% TimesNewRoman Schrift (Acrobat Reader Fonts), 
+				% dazu braucht man auch den entsprechenden 
+				% Zeichensatz für den Math-Mode
+%\usepackage{pslatex}		% ? mathematische Formeln mit Standard 
+				% Postscript Fonts gesetzt
+			% Paket     Roman         Serifenlos  Typewriter
+%\usepackage{times}	% -----------------------------------------------
+			% times     Times         Helvetica   Courier
+			% palatino  Palatino      Helvetica   Courier
+			% newcent   NewCenturySch AvantGarde  Courier
+			% bookman   Bookman       AvantGarde  Courier
+			% Diese Schriften sind die Standard-PostScript-Schriften
+			% und in jedem Drucker verfügbar
+
+\usepackage{
+%	german,			% Deutsche Trennungen (ALTE Rechtschreibung), 
+				% Anführungsstriche und mehr 
+%	ngerman,		% Deutsche Trennungen (NEUE Rechtschreibung), 
+				% Anführungsstriche und mehr
+				%
+%	acronym,		% Verwaltung von Abkuerzungen
+%	bibgerm,		% Deutsche Bibliographie 
+	calc,			% Erweiterung der arithmetischen Funktionen in 
+				% LaTeX
+				% wird verwendet um Titelseite zu zentrieren
+	color,			% im Laufenden Text einfach mit \color{Farbe) zwischen den 
+				% Farben umschalten, wobei Farbe einfach 
+				% durch z.B. red, blue, black etc. ersetzt wird
+				% \textcolor{farbe){Text)
+	datetime,   % definiere Datumsstile
+	enumitem,   % mehr Optionen für enumerate environments 
+%	epigraph,		% Zitat am Kapitelanfang
+%	fancyhdr,		% Kopf- und Fußzeilen von Dokumenten frei 
+				% gestalten
+	fancybox,		% shadowbox, doublebox, ovalbox, Ovalbox 
+	fancyvrb,		% verbatim Erweiterung:
+	float,			% Positionierung von Gleitobjekten genau an der Stelle, wo man
+				% 'figure'- oder 'table'-Umgebung die 
+				% Positionierung [H] gesetzt werden
+	%glossary,		% Glossar und Abkürzungsverzeichnis
+	mdwlist,		% compact list: itemize* ..
+	scrdate,		% \todaysname 
+	scrtime,		% \thistime
+	scrlayer-scrpage,		% Kopf- und Fußzeilen flexibel gestalten
+				%
+%	moreverb,		% verbatim-ähnlich: boxedverbatim, listing
+%	verbatim,		% Darstellung von "Text, wie er eingegeben wird"
+				%
+%	lscape,			% Erstellt eine um 90% gedrehte *neue* Seite
+%	textcomp,		% Sonderzeichen
+%	booktabs,		% Tabellenlinien
+%	longtable,		% Tabellen > 1 Seite
+%	supertabular,		% Tabellen > 1 Seite
+	tabularx,		% Blocksatzspalten
+%	ltxtable,		% tabularx + longtable
+%	multicol,		% mehrspaltige Zeilen
+%	varioref,		% einheitliche Verweise
+%	endnotes,		% Fussnoten -> Endnoten
+%	rotating,		% sidewaystable und sidewaysfigure
+%	natbib,			% Bibliographie ohne Klammer etc.
+%	marvosym,		% Euro etc.
+}
+
+
+\usepackage[acronym,toc]{glossaries}
+\makeglossaries
+
+
+\usepackage{listings}
+
+%\usepackage{pstricks}
+%\usepackage{listings}
+%\usepackage{wasysym}
+
+%\usepackage[german, first, bottomafter]{draftcopy}
+
+%\usepackage{setspace}	% Durchschuß, Zeilenabstand
+%\doublespace		% doppelzeilig oder
+%\onehalfspacing	% anderthalbzeilig
+\renewcommand{\baselinestretch}{1.1}\normalsize
+
+% Für schöne Darstellung von Algorithmen
+%\usepackage[german, algoruled, algochapter]{algorithm2e}
+%\usepackage{algorithmic}
+%\usepackage[chapter]{algorithm}
+%\floatname{algorithm}{Algorithmus}
+
+%======================================================================
+%	Pictures, Links
+%======================================================================
+
+\usepackage{graphicx}
+\graphicspath{Pictures/}	% Angabe der Pfade, wo die Grafiken liegen; 
+				% mehrere Pfade sind möglich
+\usepackage{subfig}
+\usepackage{thumbpdf}
+\usepackage[breaklinks]{hyperref}
+\def\UrlBreaks{\do\/\do-}
+%\usepackage{breakurl}
+\usepackage{minted}
+
+
+
+%======================================================================
+%	user.sty
+%======================================================================
+
+\usepackage{user}	% Makros in user.sty 
+			% \epsinc{bild.eps}{scale=1}{Bildunterschrift}
+			% \missing{Beweis fehlt noch}
+			% \comment{Ein Kommentar}
+
+%======================================================================
+%	Settings
+%======================================================================
+
+%\typearea{11}		% Satzspiegel neu konstruieren (KOMA)
+			%      10pt 11pt 12pt 
+			% DIV : 8   10   12  
+
+\pagestyle{scrheadings}	% Standart  Kopf- und Fußzeile
+\setkomafont{pageheadfoot}{\small\scshape}
+
+% ---------------------------------------------------------------------
+%\setcounter{secnumdepth}{2}
+%\setcounter{chapter}{-1}
+\setcounter{tocdepth}{3}
+
+% ---------------------------------------------------------------------
+%\sloppy		% weniger Worttrennungen, größere Wortabstände
+\fussy			% viele Worttrennungen, "schönere" Wortabstände
+
+% ---------------------------------------------------------------------
+%\flushbottom			% Ausrichtung der Seitenenden jeweils auf 
+				% gleicher Höhe
+
+% ---------------------------------------------------------------------
+%\sloppypar		% Das hier relaxt die Einstellungen zum Wortabstand 
+			% extrem. Damit ragen keine Worte über den rechten 
+			% Zeilenabstand hinaus. Dafür muß stärker auf
+			% Wortabstand geachtet werden, der kann dann ziemlich 
+			% groß werden. Man erhält aber keine Meldung mehr 
+			% über underfull boxes.
+
+%Hiermit kann man das gleiche mit weniger Holzhammer erreichen:
+%\setlength{\tolerance}{2000}           % Strafpunkt für Zeilenumbruch
+%\setlength{\emergencystretch}{3pt}     % Soweit dürfen einzelne Worte mehr 
+					% auseinandergezogen werden
+%\setlength{\hfuzz}{1pt}                % Macht den rechten Rand um bis zu 1pt 
+					% flatterig.
+
+% ---------------------------------------------------------------------
+%Vermeiden einzelner Zeilen am Ende einer Seite oder oben auf einer neuen Seite
+%\clubpenalty10000
+%\widowpenalty10000
+
+% ----------------------------------------------------------------------
+% neue Umgebungen für verwendete Sätze und Beispiele
+\newtheorem{bsp}{Beispiel}[chapter]
+\newtheorem{satz}{Satz}[chapter]
+
+% Eigene Anpassungen
+% Silbentrennung
+\tolerance 1414
+\hbadness 1414                                                                  \emergencystretch 1.5em
+\hfuzz 0.3pt
+\widowpenalty=10000
+\hyphenpenalty=200
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+\vfuzz \hfuzz
+\raggedbottom
+
+
+%======================================================================
+%	includeonly
+%======================================================================
+
+\includeonly{		% Shows which file shall be included by the include command
+		%
+  metadata		% set in variables
+  ,title		% title page, Summary and table of contents
+% All files for the include command have to be listed here!
+  ,Text/Introduction	%
+  ,Text/Fundamentals
+  ,Text/Implementation
+  ,Text/Results
+  ,Text/Evaluation
+  ,Text/Summary_Outlook
+}
+
+% Recommended structure of your scientific work
+%
+% Title Page
+% Bibliographic Description (Backside of Title Page)
+% (Task)
+% Acknowledgement
+% Abstract
+% Table of Contents
+% List of Tables
+% List of Figures
+% Introduction
+% Content
+% Summary/Outlook
+% (List of used terms)
+% Glossary (List of Abbreviations)
+% (Index)
+% Bibliography/References
+% (Theses)
+% (Declaration of Authorship)
+% Attachments
+
+
+%======================================================================
+% * *   T E X T    S T A R T S    H E R E   * * * * * * * * * * * * * *
+%======================================================================
+
+\begin{document}
+\include{metadata} % Variables, \hypersetup, etc.
+
+%======================================================================
+%	Title Page (Abstract and Table of Contents)
+%======================================================================
+
+\include{title} % Titelpage, Abstract 
+		% Table of Contents
+		% Glossary
+		% -> then page numbering starting at 1
+
+%======================================================================
+%	Content per include
+%======================================================================
+
+\include{Text/Introduction}
+\include{Text/Fundamentals}
+\include{Text/Implementation}
+\include{Text/Results}
+\include{Text/Evaluation}
+\include{Text/Summary_Outlook}
+
+%======================================================================
+%	Glossary
+%======================================================================
+
+%\manualmark
+%\addcontentsline{table of Contents}{chapter}{Glossary}
+%\markboth{Glossary}{Glossary}
+%\def\glossaryname{Glossary}
+%\printglossary
+%\cleardoublepage
+
+%======================================================================
+%	Bibliography
+%======================================================================
+\markboth{Bibliography}{Bibliography}
+\bibliographystyle{user}
+\bibliography{literature}
+%\cleardoublepage
+
+%======================================================================
+%	Theses
+%======================================================================
+%\chapter{Theses}
+%\include{theses}
+
+
+%======================================================================
+%	Attachment
+%======================================================================
+
+\renewcommand\thechapter{\Alph{chapter}}
+\setcounter{chapter}{0}
+\renewcommand*{\theHchapter}{Appendix.\the\value{chapter}}
+\chapter{Appendix\_A}
+%\cleardoublepage
+\label{chap:appendix}	
+
+Lorem ipsum dolor sit amet \acrfull{acronym1}, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu \acrfull{acronym2} feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. 
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et \acrfull{acronym3} accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+
+%======================================================================
+%	Declaration of Authorship
+%======================================================================
+\chapter*{Declaration of Authorship}
+\thispagestyle{empty}
+
+I hereby certify that this research project has been composed by me and is based on my own work, unless stated otherwise. No other person's work has been used without due acknowledgement in this project. All references and verbatim extracts have been quoted, and all sources of information, including graphs and data sets, have been specifically acknowledged. \\[2ex]
+\dcplace, \dcdate\\[6ex]
+\flushleft
+\newlength\us
+\settowidth{\us}{-\dcauthorfirstname~\dcauthorlastname-}
+\begin{tabular}{p{\us}}\hline
+\centering\footnotesize \dcauthorfirstname~\dcauthorlastname
+\end{tabular}
+
+
+
+\end{document}

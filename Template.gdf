@@ -1,0 +1,16 @@
+%%======================================================================
+%% Referenz, Kurzform, Langform, Erklaerung
+%% @entry{label [,item [,long-form]]} [text]
+%%======================================================================
+
+%%======================================================================
+%%== Abkuerzungen ======================================================
+%%======================================================================
+
+%% 2 Beispieleinträge
+@entry{ansi, ANSI, American National Standard Institute} Amerikanische
+Standardisierungsbehörde
+
+@entry{iso, ISO, International Organization for Standardization}
+früher mit \textit{International Standard Organization} bezeichnete Organisation
+mit der Aufgabe weltweiter Normung
