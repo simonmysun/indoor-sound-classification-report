@@ -1,0 +1,95 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[english,ngerman]{babel}
+\usepackage[sorting=none,style=ieee]{biblatex}
+\usepackage[margin=25mm]{geometry}
+\usepackage{scrlayer-scrpage,anyfontsize,hyperref}
+
+\renewcommand{\familydefault}{\sfdefault}
+\setkomafont{section}{\fontsize{14}{14}\selectfont}
+\usepackage{fontspec}
+\setmainfont[
+ Ligatures=TeX,
+ BoldFont={CALIBRIB.TTF},
+ ItalicFont={CALIBRII.TTF}
+]{CALIBRI.TTF}
+
+\ihead{Exposé}
+\ohead{Sun, Maoyin}
+\cfoot{}
+\ofoot{\thepage}
+
+\bibliography{literature}
+
+\begin{document}
+
+\begin{center}
+\textbf{\fontsize{16}{16}\selectfont Exposé of ``System Design, Implementation and Evaluation of a User-centered Application for Indoor Sound Classification''}
+\end{center}
+
+\bigskip
+
+\section*{Sun, Maoyin:  }
+
+\section*{Topic of the work} % (incl. explicit separation to other topics/problems) (3 Lines)
+
+To apply the acoustic event classification model provided by \cite{sampath2019cnn}, we present a web-based, user-friendly, configurable, scalable, robust and efficient approach visualizing historical or low-latency live acoustic data and analysis and supporting alarms according to given set of criteria.
+
+\section*{Starting point / working hypotheses} % (3 Lines)
+
+Deep Neural Network (DNN)s are capable of classifying acoustic signals with well performing acuracy\cite{sampath2020low}. Previously a web-based demo was implemented\cite{sampath2019realtime}. It supports showing real-time classified acoustic events and enables alarms based on given set of rules.
+
+\section*{Central questions} % (4 Lines)
+
+Although the previous user interface shows full functionality of acoustic event classification, users have raised various new requirements\cite{citationrequired} after the web-based demo was appreciated. As technology advances, major concerns include higher speed, more robustness, more informative visualization, clearer interface, better usability, etc. The improvement of user experience is the central question we face.
+
+% https://docs.google.com/spreadsheets/d/1tUheq9FyqvNKfqjs8-RIcja0QWeGs5_e/edit#gid=194775392
+
+\section*{Central goal and personal knowledge/interests} % (incl. reasons) (3 Lines)
+
+Our central goal is to improve the user experience. This includes two parts. First, the system should be robust, scalable and efficient, which enables comfortable and smooth experience. Second, we need to address the usability, accessibility and inclusion of the user interface.
+
+\section*{Methods of choice / methodical process} % (3 Lines)
+
+% I can draft or sketch out an overview and pick a suitable tech stack after understanding the requirements. Would it be ok for the thesis? Or if I don't get it right please tell me.
+
+The refactor of the backend should follow asynchronous messaging pattern to allow decoupled architecture and low latency, high throughput live data streaming. The redesign of the frontend should follow user centered and data driven principle for better customer satisfaction.
+
+\section*{Research material/analysis corpus} % (selection criteria / amount / development and preparation of data) (3 Lines)
+
+We would require at least one server to test and serve the website. More resources may be required during stress test. Other facilities to be used includes version control service, etc. To measure and improve user experience we will need answers from samples of target users.
+
+\section*{Relevant literature} % (first selections/ basic and reviewing publications, field leaders) (4 Lines)
+
+\begin{itemize}
+    \item https://www.w3.org/WAI/fundamentals/accessibility-usability-inclusion/
+    \item https://doi.org/10.1145/1753846.1754187
+    \item https://cortexmetrics.io/docs/architecture/ % https://github.com/prometheus/alertmanager/blob/main/doc/arch.svg
+    \item https://d3js.org/ % https://thingsboard.io/docs/pe/reference/
+\end{itemize}
+
+\section*{Survey of the state of the art} % (5 Lines)
+
+There are various live data streaming and alert manager ready on the market. AWS Timestream\cite{AWSTimestream} and Azure Cosmos DB\cite{AzureCosmos} are the leading cloud-based solutions for general purpose live data streaming. Prometheus alert manager\cite{AlertManager} and Kapacitor with InfluxDB\cite{kapacitor} and etc supports rule based notifications but requires complex configuration. On premise specialized design and implementation of acoustic event visualization and alarm management has not been found.
+
+\section*{Work plan and single steps} % (7 Lines)
+
+\begin{itemize}
+    \item Analyzing requirements and defining specifications;
+    \item Designing service architecture;
+    \item Prototyping and iterating backend;
+    \item Measuring and validating the performance of the architecture;
+    \item Redesigning user interfaces;
+    \item Prototyping and iterating frontend;
+    \item User research of the new user interface and evaluation of usability.
+\end{itemize}
+
+\section*{Short summary of the work from today’s perspective} % (incl. first outline) (14 Lines)
+
+Nowadays neural networks has been applied to various fields. The applications of them are now not only running on clusters but also installed on mobile and embedded devices with the assistance of hardware support\cite{moons2019embedded}. Acoustic events classifier based on convolutional neural network can now achieve rather high acuracy\cite{sampath2019cnn}. This opens the gate of variegated possibilities. A microphone on any IoT devices may report useful information and the programmable reactions can improve the qualitiy of life and even make life saving changes, such as, monitoring user's daily routines and remind user the missing of actions, or reporting abnormal events in abnormal time. Disabled and elderly people might also need such an application to help perceive their environment and ensure their safety. On the other hand, population ageing and popularizing usage of consumer electronic products lead to huge demand of better usability, accessibility and inclusion of the user interface design. Considering our target users include disabled and elderly people, aided navigation and proper user guidance is necessary. Meanwhile the data privacy issue cannot be ignored. We must have a mechanism to protect user's data and conform to the laws e.g. GDPR, etc.
+
+\section*{Refernces}
+\printbibliography[heading=none]
+
+\end{document}
