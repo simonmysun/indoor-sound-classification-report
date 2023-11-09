@@ -1,0 +1,240 @@
+\section{System Architecture}
+% - Detailed description of the solution architecture
+% - Explanation of scalability and robustness features
+
+% The refactor of the backend should follow asynchronous messaging pattern to allow decoupled architecture and low latency, high throughput live data streaming. 
+\subsection{Introduction to System Architecture}
+In this section, we introduce the overarching system architecture of our demonstration of acoustic event classification model, which is uniquely designed to address the challenges of real-time data processing and high-volume data handling. Central to this architecture is an asynchronous messaging pattern, instrumental in facilitating a decoupled architecture. This design choice is pivotal in achieving low latency and high throughput, which are essential for live data streaming.
+
+\subsubsection{Asynchronous Messaging and Decoupled Architecture}
+The system is built upon an asynchronous messaging framework, which allows for decoupling of the various components. This means each component of the system operates independently, without direct dependencies on the workflow of other components. Such a design is advantageous as it enhances the system's flexibility and scalability, allowing for easy integration of additional modules or scaling of existing ones without significant reconfiguration\cite{galvis2010messaging}.
+
+\subsubsection{Utilizing MQTT for Real-time Communication}
+A key element in this architecture is MQTT (Message Queuing Telemetry Transport) protocol, a lightweight messaging protocol designed for low-bandwidth, high-latency environments\cite{hillar2017mqtt}. The choice of MQTT is driven by its efficient publish/subscribe model, which is well-suited for scenarios where timely delivery of data is critical. We employ \textsc{Eclipse Mosquitto}, an esteemed open-source MQTT broker, to facilitate messaging between the acoustic event classifier and the user interface. This broker plays a vital role in ensuring seamless, real-time communication, a fundamental requirement for live acoustic data streaming and processing.
+
+An important aspect of MQTT is its lightweight nature, making it highly suitable for embedded hardware applications. This characteristic is particularly relevant considering the potential future extensions of our acoustic event classifier. The ability of MQTT clients to operate on low-resource, embedded hardware platforms means that the system is well-prepared for potential integrations with a wide range of IoT devices and sensors, broadening the scope and application of the classifier.
+
+\subsubsection{Emphasis on Low Latency and High Throughput}
+One of the pivotal aspects of our system's architecture is its strong emphasis on minimizing latency and maximizing throughput, which is crucial for the effective functioning of the demonstration in real-time scenarios. The incorporation of MQTT plays a vital role in achieving these objectives. MQTT's design as a lightweight messaging protocol ensures minimal overhead in the protocol stack, which translates to faster message delivery and reduced processing delays. This streamlined protocol is particularly beneficial in scenarios demanding prompt data processing, such as in the detection and classification of acoustic events.
+
+Furthermore, the scalability of the asynchronous messaging pattern is a significant contributor to maintaining high throughput. Its capacity to efficiently handle large numbers of concurrent connections without a proportional increase in resource demands means that the system can manage high volumes of data and numerous client connections effectively. This scalability is crucial, especially when considering potential expansions of the system to include more sensors or to process more complex acoustic events. The combination of MQTT's lightweight nature and its scalability thus directly influences the system's ability to deliver real-time performance with low latency and high throughput.
+
+By employing an asynchronous messaging pattern, the architecture allows for continuous data streaming and processing, minimizing delays and ensuring that the frontend interface provides real-time updates and feedback.
+
+\subsubsection{Overview of the Chapter}
+In the subsequent sections, we will delve deeper into the specifics of the system's components and their interactions. This includes a detailed examination of the acoustic event classifier, the role of the MQTT broker, and the integration with \textsc{Prometheus} for monitoring and storing historical data. Diagrams and illustrations will be provided to offer a clearer understanding of the complex relationships and data flows within the architecture.
+
+The design of this architecture is a testament to the system's core objectives: to provide a robust, efficient, and user-friendly platform for acoustic event classification. It reflects a thoughtful integration of technologies and design principles, ensuring that the system is not only functional but also scalable and adaptable to future enhancements.
+
+\subsection{Asynchronous Messaging and MQTT}
+\subsubsection{The Necessity of a Message Broker in Modern Systems}
+In distributed systems, especially those requiring real-time data processing and communication, the need for an efficient messaging system is paramount. A message broker serves as a critical intermediary in such architectures, enabling various system components to communicate effectively. The role of a message broker is to ensure that messages are appropriately routed between publishers (those who send messages) and subscribers (those who receive them). This setup allows for a decoupled architecture, where components interact without direct dependencies, leading to enhanced scalability and flexibility.
+
+\subsubsection{The Publish-Subscribe Model of MQTT Broker}
+At the heart of our system's messaging architecture lies an MQTT broker. This broker facilitates the MQTT protocol's publish-subscribe messaging pattern:
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[auto, node distance=2cm, >=stealth]
+    % Styles
+    \tikzstyle{block} = [rectangle, draw, text width=5em, text centered, minimum height=2em]
+    \tikzstyle{arrow} = [thick,->]
+
+    % Nodes
+    \node[block] (publisher1) {Publisher};
+    \node[block, below=of publisher1] (publisher2) {Publisher};
+    \node[block, below=of publisher2] (publisher3) {Publisher};
+    \node[block, right=of publisher2] (mqtt) {MQTT Broker};
+    \node[block, right=of mqtt] (subscriber2) {Subscriber};
+    \node[block, above=of subscriber2] (subscriber1) {Subscriber};
+    \node[block, below=of subscriber2] (subscriber3) {Subscriber};
+
+    % Paths
+    \draw [arrow] (publisher1) -- node[midway,sloped,above] {Publish} (mqtt);
+    \draw [arrow] (publisher2) -- node[midway,sloped,above] {Publish} (mqtt);
+    \draw [arrow] (publisher3) -- node[midway,sloped,above] {Publish} (mqtt);
+    \draw [arrow] (subscriber1) -- node[midway,sloped,above] {Subscribe} (mqtt);
+    \draw [arrow] (subscriber2) -- node[midway,sloped,above] {Subscribe} (mqtt);
+    \draw [arrow] (subscriber3) -- node[midway,sloped,above] {Subscribe} (mqtt);
+  \end{tikzpicture}
+  \caption{\label{fig:mqtt} Publish-Subscribe Model of MQTT Broker}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Publishing Messages}: Our acoustic event classifier acts as a publisher. When it identifies a specific acoustic event, it publishes a message containing the event's details to a predefined topic on the MQTT broker.
+  \item \textbf{Subscribing to Topics}: The frontend of our system subscribes to the relevant topics on the MQTT broker. Whenever a message is published to these topics, the frontend receives it instantly, allowing for real-time updates in the user interface.
+  \item \textbf{Quality of Service (QoS) Levels}: MQTT offers different levels of Quality of Service to ensure message delivery according to the system's needs. For instance, QoS level 1 ensures that messages are delivered at least once, making it suitable for critical event notifications.
+\end{itemize}
+
+When the acoustic event classifier detects an event, it publishes a message to a topic on the \textsc{Mosquitto} server. The broker then distributes this message to all subscribers of that topic. This could include the frontend application, which updates the user interface in real-time, and the monitoring tools like \textsc{Prometheus}, which track the history data of the classifier. This pattern ensures minimal delay in message delivery and high-speed data transmission, with which the components of our system can be loosely decoupled, and achieves enhanced system maintainability and scalability.
+
+\subsection{System Components and Workflow}
+The system consists the 4 major components below:
+\subsubsection{Acoustic Event Classifier}
+The Acoustic Event Classifier serves as the data source of our system, tasked with processing and interpreting audio data. Utilizing advanced algorithms and deep learning techniques, it analyzes incoming audio streams to identify and classify various acoustic events. Upon successfully classifying an event, the classifier immediately publishes this information to the MQTT broker, specifically the \textsc{Eclipse Mosquitto} server. This publication includes essential data such as the type of event detected, its timestamp, and other relevant metadata. The MQTT client ensures timely and efficient communication, essential for real-time processing in our system.
+
+\subsubsection{Frontend Subscription}
+The frontend of our system plays a crucial role in presenting the classified events to the end-users in an accessible and user-friendly manner. It achieves real-time data reception by subscribing to the MQTT broker. Whenever the Acoustic Event Classifier publishes new data, the MQTT broker relays this information to the frontend. This subscription mechanism is established through a well-defined topic structure in MQTT protocol, where the frontend listens to specific topics that the classifier publishes to. The use of MQTT’s lightweight protocol ensures that this process is efficient and scalable, capable of handling high data throughput without significant latency.
+
+\subsubsection{MQTT Exporter}
+We developed an integral component of our system's monitoring framework and named it MQTT exporter. Its primary function is to interface with the MQTT broker and convert the message data into a format that is compatible with \textsc{Prometheus}. This involves extracting key metrics from the MQTT messages, such as message frequency, payload size, and processing times. The exporter then exposes these metrics in a format that \textsc{Prometheus} can scrape and analyze.
+
+\subsubsection{\textsc{Prometheus} Integration}
+\textsc{Prometheus}, a powerful time-series database and monitoring tool\cite{turnbull2018monitoring}, is configured to periodically scrape these metrics from the MQTT exporter. Once collected, the data is stored in \textsc{prometheus}'s time-series database (TSDB). This integration allows for comprehensive monitoring and analysis of the data collected. \textsc{Prometheus}'s robust querying capabilities enable us to generate insightful metrics and alerts. By leveraging \textsc{Prometheus}, we ensure that our system not only performs optimally in real-time event classification but also maintains a high standard of operational monitoring and analysis.
+
+\subsubsection{\textsc{Grafana} for Visualization}
+In tandem with \textsc{Prometheus}, \textsc{Grafana} is used for data visualization. It provides a user-friendly interface to create dashboards that display real-time metrics and trends from \textsc{Prometheus}, enhancing our ability to interpret the data effectively.
+
+\subsubsection{Alertmanager for Notifications}
+Complementing the monitoring setup, Alertmanager is configured to work with \textsc{Prometheus}. It handles alerts generated by predefined rules in \textsc{Prometheus} and manages the notification pipeline e.g. emails or SMSs. This ensures that any anomalies or significant events from the classifier are promptly communicated to the relevant personnel or systems, enabling quick response and resolution.
+
+\subsection{Diagrams and Illustrations}
+\subsubsection{System Architecture Diagram}
+This section includes a comprehensive diagram that visually represents the entire system architecture. The diagram \ref{fig:architecture} meticulously details various components of the system and elucidates the flow of data and interactions between these components. Key elements to be illustrated in the diagram include:
+
+\begin{itemize}
+  \item \textbf{Acoustic Event Classifier}: The core component responsible for processing and classifying audio data, and publishes the prediction data to MQTT Broker.
+  \item \textbf{\textsc{Eclipse Mosquitto MQTT Broker}}: Serving as the central hub for message passing, it connects different parts of the system through publish/subscribe mechanisms.
+  \item \textbf{Frontend Application}: This component subscribes to the MQTT broker to receive real-time updates on acoustic events and instruct \textsc{Prometheus} to reload alert rules.
+  \item \textbf{MQTT Exporter}: Acts as a bridge between the MQTT broker and \textsc{Prometheus}, exporting relevant metrics and statuses.
+  \item \textbf{\textsc{Prometheus} Server}: Responsible for collecting and storing metrics from the MQTT exporter and evaluate alert rules. If any of the alerts are valid, it will trigger alert via \textsc{Alertmanager}.
+  \item \textbf{\textsc{Grafana} Dashboard}: Integrated with \textsc{Prometheus} for visualizing the collected metrics in an intuitive manner and also expose its dashboards to the frontend.
+  \item \textbf{\textsc{Alertmanager}}: Configured with \textsc{Prometheus} to handle alerts based on specific metric thresholds or anomalies.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      auto,
+      node distance=2.0cm,
+      block/.style={rectangle, draw, text width=8em, text centered, rounded corners, minimum height=3em},
+      line/.style={draw, -latex'}
+    ]
+
+    % Nodes
+    \node[block] (aec) {Acoustic Event Classifier};
+    \node[block, right=of aec] (mqttbroker) {\textsc{Eclipse Mosquitto} MQTT Broker};
+    \node[block, right=of mqttbroker] (frontend) {Frontend Application};
+    \node[block, below=of mqttbroker] (exporter) {MQTT Exporter};
+    \node[block, below=of exporter] (prometheus) {\textsc{Prometheus} Server};
+    \node[block, right=of exporter] (grafana) {\textsc{Grafana} Dashboard};
+    \node[block, right=of prometheus] (alertmanager) {\textsc{Alertmanager}};
+
+    % Connections
+    \draw[line] (aec) -- (mqttbroker) node[midway,sloped,above] {publish};
+    \draw[line] (frontend) -- (mqttbroker) node[midway,sloped,above] {subscribe};
+    \draw[line] (exporter) -- (mqttbroker) node[midway,sloped,above] {subscribe};
+    \draw[line] (prometheus) -- (exporter) node[midway,sloped,above] {scrape};
+    \draw[line] (grafana) -- (prometheus) node[midway,sloped,above] {query};
+    \draw[line] (prometheus) -- (alertmanager) node[midway,sloped,above] {trigger};
+    \draw[line] (grafana) -- (frontend) node[midway,sloped,above] {embedded};
+    \draw[line] (frontend) -- (prometheus) node[midway,sloped,below] {update / reload alert rules} node[midway,sloped,above] {through backend};
+  \end{tikzpicture}
+  \caption{\label{fig:architecture} System Design Overview}
+\end{figure}
+
+\subsubsection{Communication Flow}
+Following the system architecture diagram \ref{fig:architecture}, a dedicated sequence diagram is be presented to specifically showcase the communication flow within the system. This diagram focuses on:
+\begin{figure}[htbp]
+  \centering
+  \scalebox{0.55}{
+    \begin{sequencediagram}
+      % Participants
+      \newthread{frontend}{Frontend Application}
+      \newinst[0.2]{mqtt}{MQTT Broker}
+      \newinst[0.2]{mqttexporter}{MQTT-exporter}
+      \newinst[0.2]{prometheus}{Prometheus}
+      \newinst[0.2]{alertmanager}{Alertmanager}
+      \newinst[0.2]{grafana}{Grafana}
+      \newinst[0.2]{backend}{Backend Server}
+      \newinst[0.2]{aec}{Acoustic Event Classifier}
+
+      % Sequence 1
+      \begin{messcall}{frontend}{talk to}{backend}
+        \begin{messcall}{backend}{update alert rules}{prometheus}
+          \begin{messcall}{prometheus}{trigger alerts}{alertmanager}
+          \end{messcall}
+        \end{messcall}
+      \end{messcall}
+
+      % Sequence 2
+      \begin{messcall}{frontend}{subscribe to}{mqtt}
+        \begin{messcall}{aec}{publish to}{mqtt}
+        \end{messcall}
+      \end{messcall}
+
+      % Sequence 3
+      \begin{messcall}{aec}{publish to}{mqtt}
+        \begin{messcall}{mqtt}{collected by}{mqttexporter}
+          \begin{messcall}{mqttexporter}{collected by}{prometheus}
+            \begin{messcall}{prometheus}{trigger alert}{alertmanager}
+            \end{messcall}
+          \end{messcall}
+        \end{messcall}
+      \end{messcall}
+    \end{sequencediagram}
+  }
+
+  \caption{\label{fig:communicationflow} Communication Squence}
+\end{figure}
+
+The \ref{fig:architecture} shows three patterns of dataflow, from above to bottom, which are:
+\begin{itemize}
+  \item Manipulation of alert rules issued from frontend by user are passed to backend server, and then to \textsc{Prometheus}, and then to \textsc{Alertmanager}
+  \item Prediction updates are published to MQTT Broker and subscribed by Frontend, rendered to user in the end.
+  \item Prediction updates are published to MQTT Broker and collected by MQTT-exporter, then scraped by \textsc{Prometheus}, and alerts are triggered when alert rules are matched
+\end{itemize}
+
+Both diagrams in this section are illustrative for providing a clear visual understanding of the system's architecture in facilitating efficient and real-time data communication and monitoring.
+
+\subsection{Scalability and Robustness}
+The system design should not only meets the requirements for handling multiple data streams efficiently but also ensures robustness and continuity of service even in the face of potential component failures.
+
+\subsubsection{Efficient Multi-Endpoint Streaming}
+This system is designed to facilitate a one-to-many and many-to-one communication paradigm, where a single acoustic event classifier can stream data to multiple frontends and one frontend can receive data from multiple sources simultaneously. This multiplexing is inherent in the MQTT protocol. The decoupling of publishers and subscribers allows for the easy addition of new consumer applications (frontends) or data sources (classifiers) without needing to reconfigure or significantly modify existing components. The efficent MQTT broker effectively handles increasing load from frontend and will not affact the classifiers.
+
+\subsubsection{Fault Tolerance and Recovery}
+\begin{itemize}
+  \item \textbf{Avoidance of Single Points of Failure (SPOF)}: The architecture ensures that the failure of the classifier does not propagate to other parts of the system. Other components, such as the frontend interfaces and the MQTT broker, continue to operate normally, awaiting the classifier's recovery.
+  \item \textbf{Stateless Architecture}: Emphasizing statelessness in the design of the classifier and frontend components enhances the system's fault tolerance. This approach means that any component can fail and restart without losing its place in the data stream or affecting the overall system integrity.
+  \item \textbf{Broker Health Monitoring}: Continuous monitoring of the broker's health is implemented to detect potential failures early. This proactive approach allows for quick remedial action, minimizing downtime.
+\end{itemize}
+
+\subsection{Security and Performance Considerations}
+\subsubsection{Security in MQTT Communication}
+The implementation of MQTT within our system architecture places a strong emphasis on secure communication channels, especially between the web frontend and the MQTT broker. To ensure data integrity and confidentiality, the system employs WebSocket over SSL (Secure Sockets Layer) for this communication. This approach combines the benefits of WebSockets, which provide a full-duplex communication channel over a single long-lived connection, with the robust security features of SSL encryption.
+
+By utilizing SSL, the data transmitted between the web frontend and the MQTT broker is encrypted, safeguarding it against potential eavesdropping or tampering. This encryption is crucial, given the sensitive nature of acoustic event data and the need to protect user interactions. The use of SSL also complies with modern web security standards, ensuring that our system is resilient against common web-based threats and vulnerabilities.
+
+Moreover, the \textsc{Eclipse Mosquitto} MQTT broker is further secured using Access Control Lists (ACLs)\cite{mosquittoMosquittoconfPage}. ACLs are employed to restrict clients to specific topics, thereby enhancing the security framework. This approach is vital in preventing unauthorized access and ensuring that each client only receives data pertinent to its designated role in the system. The ACLs are meticulously configured to align with the roles and responsibilities of different system components, adding an extra layer of security by controlling topic subscriptions based on client credentials.
+
+\subsubsection{Performance Considerations}
+In terms of performance, a critical aspect of our system's architecture is its ability to handle high loads, both in the context of the \textsc{Eclipse Mosquitto} MQTT broker and the \textsc{Prometheus} monitoring tool. The system is designed to manage scenarios involving concurrent publishers and subscribers, as well as intensive \textsc{Prometheus} Query Language (PromQL) queries.
+
+\begin{itemize}
+  \item \textbf{Max Load of Mosquitto}: Our MQTT broker, \textsc{Eclipse Mosquitto}, is configured to handle a substantial number of concurrent connections, both from publishers (the acoustic event classifiers) and subscribers (the web frontend clients). The broker's performance under load has been optimized to ensure that message throughput remains high and latency low, even as the number of simultaneous connections scales. This is achieved through careful tuning of \textsc{Mosquitto}'s configuration parameters, such as connection queue lengths, message queue sizes, and client timeout settings. % mqtt load compare
+  \item \textbf{Handling Massive PromQL Queries in Prometheus}: The integration with \textsc{Prometheus} for monitoring and data analysis is another area where performance under load is a critical consideration. \textsc{Prometheus} is designed to efficiently handle large volumes of time-series data, but when faced with massive PromQL queries, resulting from the need to analyze extensive datasets or perform real-time monitoring, the system requires \textsc{Prometheus}'s performance remains optimal. This is achieved through strategies like effective data indexing, efficient query processing, and the use of optimized storage mechanisms within \textsc{Prometheus}'s time-series database\cite{timescalePrometheusQuerying}. These measures ensure that even complex and large-scale queries return results in a timely and efficient manner, maintaining the overall responsiveness of the system.
+\end{itemize}
+
+In conclusion, the security and performance aspects of our system are integral to its design, ensuring that it not only remains secure and compliant with modern standards but also robust and efficient under varying load conditions. These considerations are pivotal in maintaining the reliability and effectiveness of the acoustic event classification model and its associated web-based interface.
+
+\subsection{Summary}
+\subsubsection{Recap of Architectural Features}
+Our system's architecture is built around the principle of asynchronous messaging, utilizing \textsc{Eclipse Mosquitto} as an MQTT broker. This design choice underpins the system's key attributes:
+
+\begin{itemize}
+  \item \textbf{Asynchronous Messaging}: Ensures non-blocking, efficient data flow.
+  \item \textbf{Scalability}: Facilitated by lightweight protocol and messaging client, allowing the system to handle increased loads effectively.
+  \item \textbf{Robustness}: Achieved through reliable message delivery.
+\end{itemize}
+
+\subsubsection{Alignment with Research Objectives}
+The architectural design aligns closely with our primary objectives of low latency, high throughput, and real-time data processing:
+
+\begin{itemize}
+  \item \textbf{Low Latency}: The asynchronous pattern minimizes delays, crucial for real-time classification.
+  \item \textbf{High Throughput}: MQTT's efficiency supports high-volume data handling.
+  \item \textbf{Real-Time Data Processing}: The architecture's optimization ensures immediate insights from live data streams.
+\end{itemize}
+
+In summary, the system architecture not only meets but enhances our research goals, establishing a robust, scalable, and efficient framework for acoustic event classification.

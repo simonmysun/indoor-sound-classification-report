@@ -1,0 +1,86 @@
+\chapter{Introduction}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\section{Background and Context}
+% - Provide an introduction to acoustic event classification models and their applications.
+% - Highlight the relevance of your research in this context.
+
+In the field of acoustic event classification models, the ability to accurately identify and classify acoustic events has found applications in a wide range of industries and domains\cite{SHARAN201724}. From speech recognition systems that enhance human-computer interactions\cite{6857341} to environmental monitoring devices that detect crucial events\cite{sampath2020low}\cite{KHF17_Acoustic_Event_Classification_Using_Convolutional_Neural_Networks}, the significance of acoustic event classification cannot be overstated. However, despite its utility, this field faces several challenges that necessitate innovation and improvement.
+
+Traditional acoustic event classification models, while effective to some extent, often fall short in real-world scenarios. They may struggle with robustness when exposed to diverse environmental conditions. Scalability can be a concern when dealing with a large volume of requests. Moreover, usability and accessibility issues in these models can limit their deployment in practical applications\cite{sampath2019realtime}.
+
+Recent advancements in technology and deep learning have offered opportunities to enhance these models. However, there remains a substantial research gap in developing a comprehensive solution that addresses the issues of robustness, scalability, usability, and accessibility in a unified manner.
+
+This thesis focuses on bridging this research gap by proposing a novel approach. We aim to enhance the robustness, scalability, usability, and accessibility of acoustic event classification models through a web-based redesign. This research is significant as it contributes to improving the effectiveness and practicality of these models in real-world applications.
+
+In the following chapters, we will delve into the specifics of our approach and the methodologies used to address these challenges.
+
+\section{Motivation}
+% - Explain the driving factors and the "why" behind your research.
+% - Discuss the real-world problems or challenges that this demonstration aims to address. Discuss the need for improving the robustness, scalability, usability, and accessibility of such models.
+% - Highlight the importance of improving the understanding and accessibility of acoustic event classification for both experts and non-experts.
+
+
+Every day, we encounter a multitude of acoustic events in our environment, from emergency sirens on busy streets to the subtle rustling of leaves in a quiet park. Acoustic event classification models have proven invaluable in recognizing and categorizing these sounds, with applications ranging from surveillance and security to healthcare and wildlife monitoring. However, the existing models come with a set of challenges that warrant a fresh approach.
+
+The motivation behind this research stems from the shortcomings and unmet needs of current acoustic event classification models. While these models have made significant advancements, their applications still face critical issues in terms of robustness, scalability, usability, and accessibility.
+
+In refining the user interface for acoustic event classification, which has demonstrated its comprehensive functionality in \cite{sampath2019realtime}, we've encountered new challenges. Following the positive reception of the web-based demo, users have articulated a range of additional needs. These evolving requirements, driven by technological advancements, emphasize the importance of enhancing several aspects: increasing processing speed, bolstering robustness, enriching visualization with more informative elements, streamlining the interface for clarity, and improving overall usability. Central to our efforts is the pivotal objective of enhancing user experience, an area that demands our focused attention and innovative solutions.
+
+
+\subsection{Usability and Accessibility}
+While powerful, many acoustic event classification models remain confined to the domain of experts due to complex interfaces and cumbersome configurations. This project is motivated by the belief that user-friendliness and accessibility should not be compromised for the sake of technical sophistication.
+
+\subsection{Robustness}
+
+% - Environmental Variability
+% - Input Variability
+% - Error Handling
+% - Real-Time Performance
+% - User Interaction
+% - Cross-Device Compatibility
+
+The robustness requirements dictate that the application must adapt to diverse indoor environments, handle a wide range of input sounds, manage errors gracefully, offer real-time performance, accommodate user preferences, exhibit cross-device compatibility, sustain continuous learning, and undergo thorough stress testing and evaluation. These robustness measures are essential to guarantee seamless operation in real-world scenarios and diverse user interactions, ensuring the system's capability to provide consistent indoor sound classification.
+
+\subsection{Scalability}
+As user base continues to grow at an unprecedented rate, scalability becomes a pressing concern\cite{9746093}. Current implementations face limitations when handling vast requests efficiently. This research aims to address these scalability challenges by developing a backend that can adapt to the growing demands of data accessing.
+
+\section{Recearch Objectives}
+% - Clearly state the specific objectives of your research.
+% - Address what you aim to achieve with your web-based redesign.
+
+The primary objective of this research is to design and develop a web-based, user-friendly, configurable, scalable, robust, and efficient demonstration of an acoustic event classification model. The specific research objectives are as follows:
+
+\begin{itemize}
+  \item \textbf{Redesign the User Interface}: To redesign the existing website interface, enhancing its user-friendliness to ensure a more intuitive and engaging user experience.
+  \item \textbf{Scalability of Solution Architecture}: To develop a solution architecture that is highly scalable and can effectively handle a growing number of users, increased data, and varying workloads.
+  \item \textbf{Efficient Model Demonstration}: To demonstrate the efficiency of the acoustic event classification model within a web-based environment, showcasing its real-time processing capabilities and accuracy in classifying acoustic events.
+  \item \textbf{Robustness Testing}: To assess the robustness of the web-based model through rigorous testing, including stress tests, resilience against data variations, and real-world usage scenarios.
+  \item \textbf{Usability and Accessibility}: To evaluate the usability and accessibility features of the redesigned website, ensuring it complies with web accessibility standards (e.g., WCAG), making it accessible to a broader range of users.
+\end{itemize}
+
+These objectives collectively aim to address the research's core goal of creating a web-based demonstration that emphasizes robustness, scalability, usability, and accessibility in the context of an acoustic event classification model. They provide a structured framework for the research and the subsequent chapters of this thesis.
+
+\section{Scope and Limitations}
+% - Define the boundaries of your research, specifying what will and will not be included.
+% - Acknowledge any constraints or limitations that may affect your study.
+
+The scope of this thesis is to provide a comprehensive evaluation of the newly-designed web-based demonstration of an acoustic event classification model. It will focus on the user-friendliness, configurability, scalability, robustness, and efficiency of the web-based system. This research will not delve into the detailed technical aspects of the acoustic event classification model itself.
+
+The limitations of this study are primarily related to time constraints, as the research period is limited. The study will not address the development of the classification model itself but will focus on the implementation and demonstration of the web-based interface. Additionally, it is acknowledged that user feedback may vary, and this study will not cover all possible user experiences and feedback.
+
+\section{Outline of the Thesis}
+% - Provide an overview of the structure of the thesis.
+This thesis is structured into six chapters, each addressing a distinct aspect of developing a web-based acoustic event classification model:
+
+\begin{itemize}
+  \item \textbf{Chapter 1: Introduction}: This opening chapter sets the stage for the research by providing the necessary background and context. It outlines the motivations driving this study, the specific objectives aimed to be achieved, and the scope within which the research was conducted. It also addresses the limitations faced during the research process.
+  \item \textbf{Chapter 2: Fundamentals}: The second chapter lays the theoretical groundwork for the thesis. It delves into the key concepts of acoustic event classification, reviews relevant literature and existing systems. It covers the basics of acoustic event classification, the relevance and characteristics of web-based solutions for such applications, and the principles behind user-friendly interface design.
+  \item \textbf{Chapter 3: Implementation}: Here, the focus shifts to the practical aspects of the thesis. This chapter describes the system architecture in detail, explaining how scalability and robustness are achieved. It also covers the user interface design, emphasizing user-friendliness and accessibility, and outlines the development process including the methodologies used and challenges overcome.
+  \item \textbf{Chapter 4: Results}: The 4th Chapter presents the outcomes of the implementation. It evaluates the system’s performance, including its efficiency and accuracy, and assesses the user experience through feedback and usability testing results.
+  \item \textbf{Chapter 5: Evaluation}: The 5th chapter critically evaluates the system against the set objectives and hypotheses. It discusses the methodology employed for evaluation, interprets the results, and acknowledges the limitations of the study.
+  \item \textbf{Chapter 6: Summary and Outlook}: The final chapter summarizes the key findings and contributions of the research. It suggests avenues for future work, offering insights into how the model and its implementation could be further improved. The chapter concludes with final remarks, encapsulating the essence and significance of the research.
+
+
+\end{itemize}
