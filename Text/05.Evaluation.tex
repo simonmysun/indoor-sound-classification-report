@@ -1,6 +1,6 @@
 \chapter{Evaluation}
 \section{Evaluation Methodology}
-In this section, we will outline the methodology used to evaluate the acoustic event classification system, encompassing both the backend and frontend components, and the overall infrastructure. The evaluation focuses on technical performance, stress testing, and long-term stability.
+In this section, we will outline the methodology used to evaluate the acoustic event classification system, encompassing both the backend and frontend components and the overall infrastructure. The evaluation focuses on technical performance, stress testing, and long-term stability.
 
 \subsection{Technical Evaluation Criteria}
 To assess the system's performance comprehensively, the following technical metrics have been established:
@@ -12,16 +12,16 @@ To assess the system's performance comprehensively, the following technical metr
   \item \textbf{System Uptime}: Monitoring the overall system availability and uptime over an extended period.
 \end{itemize}
 \subsection{Stress Testing}
-Stress testing was conducted to evaluate the system's resilience and capacity under extreme conditions. The methodology included:
+Stress testing is conducted to evaluate the system's resilience and capacity under extreme conditions. The methodology included:
 
 \begin{itemize}
   \item \textbf{Testing Parameters}: Simulating high-volume data streams to the MQTT server and frontend, replicating peak load scenarios.
-  \item \textbf{Duration}: The stress tests were conducted over extended periods to observe performance under sustained high load.
-  \item \textbf{Monitoring Metrics}: Key metrics such as CPU usage, memory consumption, response times, and error rates were closely monitored during these tests.
+  \item \textbf{Duration}: The stress tests are conducted over extended periods to observe performance under sustained high load.
+  \item \textbf{Monitoring Metrics}: Key metrics such as CPU usage, memory consumption, response times, and error rates are closely monitored during these tests.
 \end{itemize}
 
 \subsection{Long-term System Stability}
-To assess the system's stability over time, the following approach was adopted:
+To assess the system's stability over time, the following approach is adopted:
 
 \begin{itemize}
   \item \textbf{Monitoring Tools}: Utilization of monitoring tools integrated with \textsc{Prometheus} and \textsc{Grafana} to track system performance metrics continuously.
@@ -33,29 +33,29 @@ To assess the system's stability over time, the following approach was adopted:
 \subsection{Backend Performance}
 \subsubsection{Response and Processing Time}
 
-The backend server demonstrated consistent and rapid response times for device and alert management tasks. Average response time was maintained below 200 milliseconds even under peak load conditions with the consideration of network latency. The API for reloading \textsc{Prometheus} alert rules was tested for efficiency, handling bulk requests with minimal latency.
+The backend server demonstrates consistent and rapid response times for device and alert management tasks. Average response time is maintained below 200 milliseconds even under peak load conditions with the consideration of network latency. The API for reloading \textsc{Prometheus} alert rules is tested for efficiency, handling bulk requests with minimal latency.
 \subsubsection{MQTT-Exporter Efficiency}
 
-The MQTT-exporter, integral for recording classifier results, showcased high efficiency. It processed and exposed data to \textsc{Prometheus} in real-time, with a negligible lag of less than 50 milliseconds. The exporter's performance under varying loads was consistent, indicating effective optimization for high-throughput scenarios.
+The MQTT-exporter, integral for recording classifier results, showcases high efficiency. It processed and exposed data to \textsc{Prometheus} in real-time, with a negligible lag of less than 50 milliseconds. The exporter's performance under varying loads is consistent, indicating effective optimization for high-throughput scenarios.
 
 \subsection{Frontend Performance}
 
 \subsubsection{Web Application Responsiveness}
 
-The single-page web application maintained swift load times, averaging 0.75 seconds from request to complete rendering, ensuring a smooth user experience. Interactive elements on the page, such as buttons and links, responded instantaneously to user inputs, demonstrating effective front-end optimization.
+The single-page web application maintains swift load times, averaging 0.75 seconds from request to complete rendering, ensuring a smooth user experience. Interactive elements on the page, such as buttons and links, responded instantaneously to user inputs, demonstrating effective front-end optimization.
 
 \subsubsection{Visualization and Data Streaming}
 
-The live view feature for data streaming was robust, handling continuous data streams without noticeable latency or buffering. The heatmap visualization, representing classifier results, was rendered effectively with real-time data. It displayed the last 60 seconds of data with clear differentiation of classification tags and prediction confidence levels.
+The live view feature for data streaming is robust, handling continuous data streams without noticeable latency or buffering. The heatmap visualization, representing classifier results, is rendered effectively with real-time data. It displays the last 60 seconds of data with clear differentiation of classification tags and prediction confidence levels.
 \subsection{Infrastructure Robustness}
 
 \subsubsection{\textsc{Docker} and Microservices}
 
-\textsc{Docker Compose} facilitated a resilient and scalable microservices architecture. This setup ensured that each component (\textsc{Eclipse Mosquitto}, \textsc{Prometheus}, \textsc{Grafana}, etc.) operated efficiently and was easily manageable. The system's microservices architecture played a crucial role in achieving high availability and fault tolerance.
+\textsc{Docker Compose} facilitates a resilient and scalable microservices architecture. This setup ensures that each component (\textsc{Eclipse Mosquitto}, \textsc{Prometheus}, \textsc{Grafana}, etc.) operates efficiently and is easily manageable. The system's microservices architecture played a crucial role in achieving high availability and fault tolerance.
 
 \subsubsection{Monitoring and Alerting}
 
-\textsc{Prometheus} and Grafana were effectively utilized for monitoring system metrics and visualizing performance data. This setup allowed for proactive identification and resolution of potential issues. Alertmanager successfully managed and routed alerts, ensuring timely responses to system anomalies.
+\textsc{Prometheus} and Grafana are effectively utilized for monitoring system metrics and visualizing performance data. This setup allows for proactive identification and resolution of potential issues. Alertmanager successfully manages and routes alerts, ensuring timely responses to system anomalies.
 
 \subsection{Long-term Stability Results}
 \subsubsection{Operational Consistency}
@@ -63,30 +63,32 @@ The live view feature for data streaming was robust, handling continuous data st
 Over several months of operation, the system demonstrated exceptional stability. There were no unscheduled downtimes, indicating a highly reliable setup. Regular monitoring revealed that the system maintained an uptime of 99.9\%, exceeding industry standards for similar applications.
 
 \subsubsection{Error Rates and Maintenance}
-The error rate was maintained at no more than 0.1\%, a testament to the robustness of the application. This is majorly due to network disturbances. Minimal maintenance was required throughout the operational period, underscoring the system’s efficiency and self-sufficiency.
+The error rate is maintained at no more than 0.1\%, a testament to the robustness of the application. This is mainly due to network disturbances. Minimal maintenance is required throughout the operational period, underscoring the system’s efficiency and self-sufficiency.
 
 \section{Analysis of Findings}
 \subsection{Correlation with Objectives}
-The evaluation results demonstrated a strong alignment with the initial research objectives. The backend server efficiently handled device and alert management operations, and the API for reloading \textsc{Prometheus} alert rules functioned within the expected parameters, confirming the system's robustness. The MQTT-exporter's performance in recording classifier results was consistent with the projected efficiency metrics, reinforcing the system's effectiveness in real-time data processing.
+The evaluation results demonstrate a strong alignment with the initial research objectives. The backend server efficiently handles device and alert management operations, and the API for reloading \textsc{Prometheus} alert rules functioned within the expected parameters, confirming the system's robustness. The MQTT-exporter's performance in recording classifier results is consistent with the projected efficiency metrics, reinforcing the system's effectiveness in real-time data processing.
 
-The frontend's single-page web application maintained a high level of responsiveness, even under heavy data loads. The live view feature's ability to handle a substantial data stream without significant latency or disruption was particularly noteworthy, aligning well with the objectives of scalability and robustness. The heatmap visualization, with its dynamic rendering capabilities, effectively displayed the classification data, underscoring the usability aspect of the system.
+The frontend's single-page web application maintains a high level of responsiveness, even under heavy data loads. The live view feature's ability to handle a substantial data stream without significant latency or disruption is particularly noteworthy, aligning well with the objectives of scalability and robustness. The heatmap visualization, with its dynamic rendering capabilities, effectively displays the classification data, underscoring the usability aspect of the system.
 
 \subsection{Insights from Stress Testing}
-Stress testing revealed the system's capacity to handle peak loads effectively. The MQTT server and frontend visualization demonstrated resilience under high-volume data streaming, with no significant performance degradation. However, the tests also highlighted potential areas for improvement. For instance, during peak loads, minor delays were observed in the heatmap rendering, suggesting a need for optimization in data processing or visualization algorithms.
+Stress testing reveals the system's capacity to handle peak loads effectively. The MQTT server and frontend visualization demonstrate resilience under high-volume data streaming, with no significant performance degradation. However, the tests also highlight potential areas for improvement. For instance, during peak loads, minor delays were observed in the heatmap rendering, suggesting a need for optimization in data processing or visualization algorithms.
 
-The backend components, including \textsc{Docker Compose}, \textsc{Eclipse Mosquitto}, \textsc{Prometheus}, \textsc{Grafana}, \textsc{Alertmanager}, \textsc{Nginx}, and \textsc{Traefik}, collectively contributed to the system's stability. Their integration demonstrated not only technical compatibility but also efficiency in handling concurrent requests and data streams.
+The backend components, including \textsc{Docker Compose}, \textsc{Eclipse Mosquitto}, \textsc{Prometheus}, \textsc{Grafana}, \textsc{Alertmanager}, \textsc{Nginx}, and \textsc{Traefik}, collectively contribute to the system's stability. Their integration demonstrates not only technical compatibility but also efficiency in handling concurrent requests and data streams.
 
 \subsection{Stability and Reliability Insights}
-Over several months of operation, the system exhibited remarkable stability. The absence of unscheduled downtime is a testament to the system's reliability and robustness. The error rates remained consistently low, and maintenance requirements were minimal, which are indicators of a well-architected solution. This long-term stability, coupled with the system's performance under stress, confirms the efficacy of the chosen technologies and architectural decisions.
+Over several months of operation, the system exhibits remarkable stability. The absence of unscheduled downtime is a testament to the system's reliability and robustness. The error rates remain consistently low, and maintenance requirements are minimal, which are indicators of a well-architected solution. This long-term stability, coupled with the system's performance under stress, confirms the efficacy of the chosen technologies and architectural decisions.
 
 \subsection{Interpretation and Future Directions}
 The findings from this evaluation phase provide valuable insights into the system's current state and potential areas for enhancement. The correlation between the objectives and the observed performance indicates that the system is well-aligned with the envisioned goals. The insights gained from stress testing and long-term stability analysis will be instrumental in guiding future development efforts.
 
-The system's ability to handle high data volumes and maintain uptime over extended periods highlights its readiness for deployment in real-world scenarios. However, the minor delays observed during peak loads and the potential for further optimization suggest that there is room for improvement, especially in terms of processing efficiency and response time. Future work could focus on refining these aspects to enhance the overall user experience and system performance.
+The system's ability to handle high data volumes and maintain uptime over extended periods highlights its readiness for deployment in real-world scenarios. However, the minor delays observed during peak loads and the potential for further optimization suggest that there is room for improvement, especially in terms of processing efficiency and response time. Future work can focus on refining these aspects to enhance the overall user experience
+and system performance.
+
 \section{Limitations and Areas for Improvement}
 \subsection{Technical Limitations}
 \begin{itemize}
-  \item \textbf{Scalability of Backend Services}: While the current backend architecture has demonstrated stability, its scalability under significantly increased loads remains untested. The interaction between the MQTT-exporter and \textsc{Prometheus}, particularly during high-frequency data ingestion, may require optimization to handle larger scale deployments.
+  \item \textbf{Scalability of Backend Services}: While the current backend architecture has demonstrated stability, its scalability under significantly increased loads remains untested. The interaction between the MQTT-exporter and \textsc{Prometheus}, particularly during high-frequency data ingestion, may require optimization to handle larger-scale deployments.
   \item \textbf{Frontend Performance under Extreme Conditions}: The frontend's capability to render real-time data efficiently in the heatmap visualization has been established under current conditions. However, its performance under extreme scenarios, such as handling data streams from a substantially higher number of acoustic events, has not been fully explored.
   \item \textbf{Security Considerations}: The current setup, while robust in performance, has not been extensively tested against potential security vulnerabilities. As the system scales, a more thorough security analysis and the integration of advanced security protocols will be necessary.
 \end{itemize}
@@ -100,7 +102,7 @@ The system's ability to handle high data volumes and maintain uptime over extend
 \subsection{Suggested Improvements}
 \begin{itemize}
   \item \textbf{Enhanced Scalability Testing}: Future work should include stress testing under higher loads and more extreme conditions. This would provide a clearer picture of the system's scalability limits and guide necessary optimizations in both backend and frontend components.
-  \item \textbf{User Feedback Mechanisms}: Implementing a structured mechanism for collecting user feedback, such as in-application surveys or user testing sessions, will be crucial. This feedback will not only improve the usability of the system but also help in understanding user needs more effectively.
+  \item \textbf{User Feedback Mechanisms}: Implementing a structured mechanism for collecting user feedback, such as in-application surveys or user testing sessions, will be necessary. This feedback will not only improve the usability of the system but also help in understanding user needs more effectively.
   \item \textbf{Security Enhancements}: As part of continuous improvement, implementing a comprehensive security audit and integrating advanced security features will be essential, especially considering the sensitive nature of acoustic event data.
   \item \textbf{Frontend User Interface Optimization}: Based on anticipated user feedback, there will likely be a need for iterative improvements to the user interface. This includes enhancing the data visualization aspects for better clarity and more intuitive navigation, especially for non-technical users.
   \item \textbf{Documentation and Support}: Developing comprehensive documentation and support guides for new users can significantly improve user experience and system accessibility. This should include detailed guides on system setup, feature utilization, and troubleshooting.

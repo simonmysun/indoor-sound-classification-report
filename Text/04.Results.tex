@@ -10,10 +10,10 @@
 % - Detailed walkthrough of the backend and frontend setup
 % - Explanation of the docker compose environment, Eclipse Mosquitto, Prometheus, Grafana, Alertmanager, Nginx, and Traefix proxy
 % - Description of the MQTT-exporter and its integration with Prometheus
-This section provides a comprehensive demonstration of the our web-based result, focusing on both the backend and frontend implementations, as well as the setup of the supporting infrastructure.
+This section provides a comprehensive demonstration of our web-based result, focusing on both the backend and frontend implementations, as well as the setup of the supporting infrastructure.
 
 \subsubsection{Backend Architecture}
-The core of the system is a robust backend server responsible for device management, alert management, and providing an API for reloading \textsc{Prometheus} alert rules. The MQTT-exporter, designed to record classifier results and expose them to \textsc{Prometheus} in a format compatible with \textsc{Prometheus} runs sound and safe.
+The core of the system is a robust backend server responsible for device management, alert management, and providing an API for reloading \textsc{Prometheus} alert rules. The MQTT-exporter, designed to record classifier results and expose them to \textsc{Prometheus} in a format compatible with \textsc{Prometheus} runs soundly and safely.
 
 \begin{figure}[htbp]
   \centering
@@ -22,7 +22,7 @@ The core of the system is a robust backend server responsible for device managem
 \end{figure}
 
 \subsubsection{Infrastructure Setup}
-The system operates within a \textsc{Docker Compose} environment, in an isolated network namespace, ensuring security, scalability and ease of deployment. The services running includes our backend APIs, \textsc{Eclipse Mosquitto} with file-based user and access control list (ACL) management, \textsc{Prometheus}, \textsc{Grafana} and \textsc{mosquitto-exporter} exposing metrics to \textsc{Prometheus} for comprehensive monitoring.
+The system operates within a \textsc{Docker Compose} environment, in an isolated network namespace, ensuring security, scalability, and ease of deployment. The services running include our backend APIs, \textsc{Eclipse Mosquitto} with file-based user and access control list (ACL) management, \textsc{Prometheus}, \textsc{Grafana} and \textsc{mosquitto-exporter} exposing metrics to \textsc{Prometheus} for comprehensive monitoring.
 
 \begin{figure}[htbp]
   \centering
@@ -107,22 +107,22 @@ In summary, the web-based model demonstrates a cohesive integration of backend r
 \subsection{Test Setup and Methodology}
 In order to evaluate the effectiveness and reliability of the alert system, a comprehensive testing strategy is implemented. The test environment is configured to mimic real-world conditions as closely as possible. This involves setting up the complete system architecture, including the backend server, MQTT-exporter, and the integration with \textsc{Prometheus} and \textsc{Alertmanager}.
 
-The methodology involves generating a series of simulated acoustic events, which were then classified and processed by the system. These events were designed to test the system's ability to accurately detect and categorize different types of acoustic signals, and subsequently trigger appropriate alerts.
+The methodology involves generating a series of simulated acoustic events, which are then classified and processed by the system. These events are designed to test the system's ability to accurately detect and categorize different types of acoustic signals, and subsequently trigger appropriate alerts.
 
-We use perlin noise to simulate acoustic events. The predictions of the classifier are broadcasted by \textsc{Mosquitto} and the MQTT-exporter records the result. \textsc{Prometheus} scrapes the result from MQTT-exporter and evaluate the alert rules, and in the end trigger the \textsc{Alertmanager} to send alerts by email.
+We use Perlin noise to simulate acoustic events. The predictions of the classifier are broadcasted by \textsc{Mosquitto} and the MQTT-exporter records the result. \textsc{Prometheus} scrapes the result from MQTT-exporter and evaluates the alert rules, and in the end triggers the \textsc{Alertmanager} to send alerts by email.
 
 \subsection{Test Results}
 \subsubsection{Alert Triggering}
-The tests showed that the alerts were successfully triggered under specific conditions designed to mimic real acoustic events. For instance, when a predefined sound pattern was detected, the system promptly identified it and triggered the corresponding alert. This demonstrates the system's ability to react accurately to environmental cues.
+The tests showed that the alerts are successfully triggered under specific conditions designed to mimic real acoustic events. For instance, when a predefined sound pattern is detected, the system promptly identifies it and triggers the corresponding alert. This demonstrates the system's ability to react accurately to environmental cues.
 
 \subsubsection{Alert Rules Evaluation Time}
 
-A critical aspect of the alert system's performance is the speed of alert rule evaluation. During testing, the average alert rules evaluation time was measured to be approximately 145 milliseconds. This quick response time is essential in situations where timely alerts are crucial, and it underscores the system's efficiency.
+A critical aspect of the alert system's performance is the speed of alert rule evaluation. During testing, the average alert rules evaluation time is measured to be approximately 145 milliseconds. This quick response time is essential in situations where timely alerts are crucial, and it underscores the system's efficiency.
 
 % screenshot alert rules evaluation time
 
 \subsubsection{Email Notification Delivery}
-The effectiveness of the alert system also depends on the successful delivery of notifications. In this regard, the system performed admirably. Emails generated as a result of the triggered alerts were sent and successfully delivered to the recipients' mailboxes. This was verified through a combination of automated scripts and manual checks. The emails contained detailed information about the alert, including the time of occurrence and the specific nature of the acoustic event.
+The effectiveness of the alert system also depends on the successful delivery of notifications. In this regard, the system performed admirably. Emails generated as a result of the triggered alerts are sent and successfully delivered to the recipient's mailboxes. This is verified through a combination of automated scripts and manual checks. The emails contain detailed information about the alert, including the time of occurrence and the specific nature of the acoustic event.
 
 \begin{figure}[htbp]
   \centering
@@ -136,17 +136,15 @@ The tests conducted on the alert system have conclusively demonstrated its relia
 % - Present the results of usability and accessibility testing.
 % - Discuss how the web-based solution fulfills these aspects.
 \subsubsection{Web Accessibility Evaluation}
-The web application was rigorously evaluated for accessibility using a range of Web Accessibility Evaluation Tools. These tools assess key areas such as screen reader compatibility, keyboard navigation, and adherence to the Web Content Accessibility Guidelines (WCAG).
+The web application is rigorously evaluated for accessibility using a range of Web Accessibility Evaluation Tools. These tools assess key areas such as screen reader compatibility, keyboard navigation, and adherence to the Web Content Accessibility Guidelines (WCAG).
 
 \subsubsection{Evaluation Results}
 \begin{itemize}
-  \item \textbf{Screen Reader Compatibility}: The application was tested with several leading screen readers. Results indicated high compatibility, with screen readers effectively interpreting and voicing out content and navigation elements.
-  \item \textbf{Keyboard Navigation}: The application supports comprehensive keyboard navigation. Testing showed that users could navigate through all interactive elements using the keyboard, a vital feature for users with motor impairments or those who prefer keyboard inputs.
-  \item \textbf{Screen Reader Compatibility}: The application was tested with several leading screen readers. Results indicated high compatibility, with screen readers effectively interpreting and voicing out content and navigation elements.
-  \item \textbf{Keyboard Navigation}: The application supports comprehensive keyboard navigation. Testing showed that users could navigate through all interactive elements using the keyboard, a vital feature for users with motor impairments or those who prefer keyboard inputs.
+  \item \textbf{Screen Reader Compatibility}: The application is tested with several leading screen readers. Results indicated high compatibility, with screen readers effectively interpreting and voicing out content and navigation elements.
+  \item \textbf{Keyboard Navigation}: The application supports comprehensive keyboard navigation. Testing shows that users can navigate through all interactive elements using the keyboard, a vital feature for users with motor impairments or those who prefer keyboard inputs.
   \item \textbf{Color Contrast and Text Readability}: The evaluation tools checked for color contrast ratios and text readability. The application meets the recommended contrast ratios, ensuring that text is legible and distinguishable for users with visual impairments.
-  \item \textbf{ALT Tags and ARIA Labels}: The usage of ALT tags for images and ARIA labels for interactive elements was found to be consistent and descriptive, aiding users who rely on assistive technologies to understand and interact with the content.
-  \item \textbf{Responsive Design}: The application's responsive design was tested across various devices and screen sizes. This ensures accessibility and usability irrespective of the device used, accommodating users with different preferences and requirements.
+  \item \textbf{ALT Tags and ARIA Labels}: The usage of ALT tags for images and ARIA labels for interactive elements is found to be consistent and descriptive, aiding users who rely on assistive technologies to understand and interact with the content.
+  \item \textbf{Responsive Design}: The application's responsive design is tested across various devices and screen sizes. This ensures accessibility and usability irrespective of the device used, accommodating users with different preferences and requirements.
 \end{itemize}
 
 \subsubsection{Compliance with WCAG}
@@ -166,7 +164,7 @@ In order to evaluate the performance and efficiency of our web-based acoustic ev
 \end{itemize}
 
 \subsection{Analysis of Web Vitals}
-Web Vitals provided crucial insights into the user experience, particularly focusing on metrics such as Largest Contentful Paint (LCP), First Input Delay (FID), and Cumulative Layout Shift (CLS). These metrics helped in identifying areas where the application's performance could be optimized for a smoother and more responsive user experience.
+Web Vitals provided valuable insights into the user experience, particularly focusing on metrics such as Largest Contentful Paint (LCP), First Input Delay (FID), and Cumulative Layout Shift (CLS). These metrics helped in identifying areas where the application's performance could be optimized for a smoother and more responsive user experience.
 
 \begin{table}[h!]
   \centering
@@ -190,7 +188,7 @@ Web Vitals provided crucial insights into the user experience, particularly focu
 
 
 \subsection{Profiling with Flame Graphs and Heap Snapshots}
-The profiling of the application using DevTools was instrumental in pinpointing specific areas where the application's performance could be improved. Flame graphs offered a visual representation of the execution time of various functions, aiding in identifying performance bottlenecks. Heap snapshots provided an in-depth look at memory usage, which was critical in detecting memory leaks and optimizing memory management.
+The profiling of the application using DevTools is instrumental in pinpointing specific areas where the application's performance can be improved. Flame graphs offer a visual representation of the execution time of various functions, aiding in identifying performance bottlenecks. Heap snapshots provide an in-depth look at memory usage, which is critical in detecting memory leaks and optimizing memory management.
 
 \begin{figure}[htbp]
   \centering
@@ -198,7 +196,7 @@ The profiling of the application using DevTools was instrumental in pinpointing 
   \caption{\label{fig:profiling}The Profiling of Around 10 Seconds Sample}
 \end{figure}
 \subsection{Real-Time Monitoring with \textsc{Stat.js}}
-\textsc{Stat.js} was employed to monitor the system's performance in real-time, specifically focusing on render time, FPS, and memory usage. This continuous monitoring allowed for immediate detection and resolution of issues that arose during the application's operation, ensuring optimal performance at all times. The render time and FPS metrics were particularly useful in evaluating the efficiency of the visualization components, such as the heatmap and live data stream renderings.
+\textsc{Stat.js} is employed to monitor the system's performance in real-time, specifically focusing on render time, FPS, and memory usage. This continuous monitoring allows for the immediate detection and resolution of issues that arise during the application's operation, ensuring optimal performance at all times. The render time and FPS metrics are particularly useful in evaluating the efficiency of the visualization components, such as the heatmap and live data stream renderings.
 
 \begin{figure}[htbp]
   \centering
@@ -206,4 +204,4 @@ The profiling of the application using DevTools was instrumental in pinpointing 
   \caption{\label{fig:stats}Timing and Memory Usage of the Visualization}
 \end{figure}
 
-The machine-based feedback analysis provided a comprehensive overview of the system's performance from a technical standpoint. The insights gathered from Web Vitals, flame graphs, heap snapshots, and \textsc{Stat.js} metrics were integral in refining the application, ensuring it not only meets but exceeds the standards of robustness, efficiency, and user experience.
+The machine-based feedback analysis provides a comprehensive overview of the system's performance from a technical standpoint. The insights gathered from Web Vitals, flame graphs, heap snapshots, and \textsc{Stat.js} metrics are integral in refining the application, ensuring it not only meets but exceeds the standards of robustness, efficiency, and user experience.
