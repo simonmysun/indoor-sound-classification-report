@@ -187,7 +187,7 @@ For the data visualization aspect of our frontend, we choose \textsc{D3.js} libr
 The integration of D3.js with \textsc{React.js} posed certain challenges due to their differing approaches to DOM manipulation. To overcome this, we develop custom hooks in \textsc{React.js} to encapsulate \textsc{D3.js} code, ensuring that the \textsc{D3.js} visualizations were seamlessly integrated into the \textsc{React.js} component lifecycle. This approach maintains \textsc{React.js}'s declarative nature while leveraging \textsc{D3.js}'s powerful data-driven transformation capabilities.
 
 \subsubsection{Single Page Web Application Development}
-% Development process of the single page application.
+% Development process of the single-page application.
 % Integration with the MQTT server for live data streaming.
 
 We utilize \textsc{mqtt.js} to establish a reliable connection for live data streaming from the acoustic event classifier. This allows for the real-time reception of data on the frontend. \textsc{D3.js} is employed to render this data stream into an intuitive and interactive heatmap. The visualization represents the last 60 seconds of data on the x-axis, with classification tags on the y-axis. The color intensity in the heatmap corresponds to the confidence level of each prediction. We face challenges in synchronizing the high-velocity data stream with the \textsc{D3.js} visualization. To address this, we implement efficient data-binding techniques and optimize the rendering process to ensure smooth, real-time updates.

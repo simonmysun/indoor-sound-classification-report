@@ -2,7 +2,7 @@
 % - Detailed description of the solution architecture
 % - Explanation of scalability and robustness features
 
-% The refactor of the backend should follow asynchronous messaging pattern to allow decoupled architecture and low latency, high throughput live data streaming. 
+% The refactor of the backend should follow an asynchronous messaging pattern to allow decoupled architecture and low latency, high throughput live data streaming. 
 \subsection{Introduction to System Architecture}
 In this section, we introduce the overarching system architecture of our demonstration of the acoustic event classification model, which is uniquely designed to address the challenges of real-time data processing and high-volume data handling. Central to this architecture is an asynchronous messaging pattern, instrumental in facilitating a decoupled architecture. This design choice is pivotal in achieving low latency and high throughput, which are essential for live data streaming.
 
@@ -74,7 +74,7 @@ The system consists the 4 major components below:
 The Acoustic Event Classifier serves as the data source of our system, tasked with processing and interpreting audio data\cite{sampath2019cnn}. Utilizing advanced algorithms and deep learning techniques, it analyzes incoming audio streams to identify and classify various acoustic events. Upon successfully classifying an event, the classifier immediately publishes this information to the MQTT broker, specifically the \textsc{Eclipse Mosquitto} server. This publication includes essential data such as the type of event detected, its timestamp, and other relevant metadata. The MQTT client ensures timely and efficient communication, essential for real-time processing in our system.
 
 \subsubsection{Frontend Subscription}
-The frontend of our system plays a critical role in presenting the classified events to the end-users in an accessible and user-friendly manner. It achieves real-time data reception by subscribing to the MQTT broker. Whenever the Acoustic Event Classifier publishes new data, the MQTT broker relays this information to the frontend. This subscription mechanism is established through a well-defined topic structure in the MQTT protocol, where the frontend listens to specific topics that the classifier publishes on. The use of MQTT’s lightweight protocol ensures that this process is efficient and scalable, capable of handling high data throughput without significant latency.
+The frontend of our system plays a critical role in presenting the classified events to the end-users in an accessible and user-friendly manner. It achieves real-time data reception by subscribing to the MQTT broker. Whenever the Acoustic Event Classifier publishes new data, the MQTT broker relays this information to the frontend. This subscription mechanism is established through a well-defined topic structure in the MQTT protocol, where the frontend listens to specific topics that the classifier publishes to. The use of MQTT’s lightweight protocol ensures that this process is efficient and scalable, capable of handling high data throughput without significant latency.
 
 \subsubsection{MQTT Exporter}
 We developed an integral component of our system's monitoring framework and named it MQTT exporter. Its primary function is to interface with the MQTT broker and convert the message data into a format that is compatible with \textsc{Prometheus}. This involves extracting key metrics from the MQTT messages, such as message frequency, payload size, and processing times. The exporter then exposes these metrics in a format that \textsc{Prometheus} can scrape and analyze.
@@ -97,7 +97,7 @@ This section includes a comprehensive diagram that visually represents the entir
   \item \textbf{\textsc{Eclipse Mosquitto MQTT Broker}}: Serving as the central hub for message passing, it connects different parts of the system through publish/subscribe mechanisms.
   \item \textbf{Frontend Application}: This component subscribes to the MQTT broker to receive real-time updates on acoustic events and instruct \textsc{Prometheus} to reload alert rules.
   \item \textbf{MQTT Exporter}: Acts as a bridge between the MQTT broker and \textsc{Prometheus}, exporting relevant metrics and statuses.
-  \item \textbf{\textsc{Prometheus} Server}: Responsible for collecting and storing metrics from the MQTT exporter and evaluating alert rules. If any of the alerts are valid, it will trigger alert via \textsc{Alertmanager}.
+  \item \textbf{\textsc{Prometheus} Server}: Responsible for collecting and storing metrics from the MQTT exporter and evaluating alert rules. If any of the alerts are valid, it will trigger an alert via \textsc{Alertmanager}.
   \item \textbf{\textsc{Grafana} Dashboard}: Integrated with \textsc{Prometheus} for visualizing the collected metrics in an intuitive manner and also exposing its dashboards to the frontend.
   \item \textbf{\textsc{Alertmanager}}: Configured with \textsc{Prometheus} to handle alerts based on specific metric thresholds or anomalies.
 \end{itemize}
