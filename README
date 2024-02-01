@@ -1,23 +1,15 @@
-Mini-Anleitung zur Benutzung des Pakets "Diplomarbeit mit LaTeX"
-================================================================
+Master Thesis
+=============
 
-1. Paket auspacken
-   mkdir Arbeit
-   cd Arbeit
-   tar xvfz <pfad>/vorlage.tar.gz
+## git remote repositories
 
-2. Pseudoarbeit generieren
-   make
+- on overleaf: https://git.overleaf.com/62b1cea1f93940742825b6c2
+- on github: git@github.com:simonmysun/thesis.git
 
-3. Das Ergebnis 'vorlage.ps' bildet (vom Layout her) eben gerade
-   die 'Vorlage', als Inhalt findet man eine kurze Anleitung zur
-   Benutzung der einzelnen Dateien.
-   
-   
+## Compilation guide
 
-Bekannte Probleme:
-Fehler: auf dem Titelblatt erscheint "disposition" als Text
------------------------------------------------------------
-für zukünftige KOMAskript-Versionen müssen in titel.tex alle
-Kommandos  '\usekomafont{sectioning}' in
-'\usekomafont{disposition}' geändert werden!
+Can be compiled with one of the following process:
+
+- latexmk
+- pdflatex -> bibtex -> pdflatex -> pdflatex
+
