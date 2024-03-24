@@ -4,7 +4,7 @@ Master Thesis
 ## git remote repositories
 
 - on overleaf: https://git.overleaf.com/62b1cea1f93940742825b6c2
-- on github: git@github.com:simonmysun/thesis.git
+- on github: git@github.com:simonmysun/indoor-sound-classification-report.git
 
 ## Compilation guide
 
@@ -13,3 +13,7 @@ Can be compiled with one of the following process:
 - latexmk
 - pdflatex -> bibtex -> pdflatex -> pdflatex
 
+## Related softwares
+
+- https://github.com/simonmysun/indoor-sound-classification-frontend
+- https://github.com/simonmysun/indoor-sound-classification-backend-mock
